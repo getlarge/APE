@@ -1,0 +1,29 @@
+# Dependency directory and npm log
+node_modules
+npm-debug.log
+tmp
+
+# Code coverage results
+/coverage
+coverage*
+
+# Built package
+/*.tgz
+
+# Compiled client resources
+/public/
+
+# Revision file
+config/_revision
+
+# OS X
+.DS_Store
+
+# vim
+*.swp
+*.swo
+
+# eslint
+.eslintcache
+
+

@@ -1,0 +1,22 @@
+{
+  "name": "bpmn-engine-test",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "author": "",
+  "scripts": {
+    "test": "jest"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.5.0",
+    "bpmn-engine": "^4.1.2",
+    "camunda-bpmn-moddle": "^0.13.0",
+    "lodash": "^4.17.4",
+    "node-fetch": "^1.6.3",
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "jest": "^19.0.2"
+  }
+}
