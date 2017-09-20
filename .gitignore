@@ -3,6 +3,9 @@ node_modules
 npm-debug.log
 tmp
 
+#Cache for process files 
+data/*
+
 # Code coverage results
 /coverage
 coverage*
