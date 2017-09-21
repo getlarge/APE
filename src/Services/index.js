@@ -1,4 +1,8 @@
 module.exports = {
+  auth: {
+    module: __dirname + '/auth.js',
+    fnName: 'auth',
+  },
   log: {
     module: __dirname + '/log.js',
     fnName: 'log',
