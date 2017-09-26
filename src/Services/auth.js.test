@@ -1,0 +1,40 @@
+const RocketChat = require('rocketchat-nodejs').Client;
+
+module.exports.auth = (message, callback) => {
+  let {host, port, scheme, username, password, body, roomId} = message;
+  host = host || 'chat.getlarge.eu';
+  port = port || 443;
+  scheme = scheme || 'https';
+  body = body || 'me voila!';
+  roomId = roomId || 'Cmhni6vpd3eCbstrA';
+  console.log('AUTH REQUEST SEND');
+	
+  const Client = new RocketChat({
+    host: host,
+    port: port,
+    scheme: scheme,
+    username: username,
+    password: password
+  });
+
+  const Authentication = Client.Authentication();
+  const Chat = Client.Chat();
+
+  Client.login().then(() => {
+    console.log('AUTH REQUEST RECEIVED');
+
+  // /api/v1/chat.postMessage
+  Chat.postMessage({ roomId: 'Cmhni6vpd3eCbstrA', text: "test de l'API rocketchat-nodejs" }).then((result) => {
+    var postMessage = result;
+    console.log(postMessage);
+  });
+
+  // /api/v1/logout
+  Authentication.logout().then((result) => {
+    var info = result;
+    console.log(info);
+  });
+
+}).catch((error) => {
+  console.log(error);
+};

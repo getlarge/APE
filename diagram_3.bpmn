@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.7.1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
   <bpmn:process id="Process_1" name="Test process" isExecutable="true" camunda:versionTag="1.0">
     <bpmn:startEvent id="Start" name="Start">
       <bpmn:outgoing>SequenceFlow_1e6vzx0</bpmn:outgoing>
@@ -10,7 +10,7 @@
     <bpmn:serviceTask id="fetch" name="Get weather" camunda:expression="${services.query}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="url"><![CDATA[http://api.openweathermap.org/data/2.5/weather?q=Moscow,ru&appid=77326e53862fdda790be58656e73e36e&units=metric]]></camunda:inputParameter>
+          <camunda:inputParameter name="url"><![CDATA[http://api.openweathermap.org/data/2.5/weather?q=Kazan,ru&appid=77326e53862fdda790be58656e73e36e&units=metric]]></camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1e6vzx0</bpmn:incoming>
@@ -46,7 +46,7 @@
           <camunda:inputParameter name="input">
             <camunda:script scriptFormat="JavaScript">variables.taskInput.parser[0]</camunda:script>
           </camunda:inputParameter>
-          <camunda:inputParameter name="title">Current weather in Moscow:</camunda:inputParameter>
+          <camunda:inputParameter name="title">Current weather in Kazan:</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0fpi01e</bpmn:incoming>
@@ -70,16 +70,6 @@
       <bpmn:outgoing>SequenceFlow_1r11qu9</bpmn:outgoing>
     </bpmn:parallelGateway>
     <bpmn:sequenceFlow id="SequenceFlow_12879j6" sourceRef="ExclusiveGateway_0c57ix8" targetRef="parallel1" />
-    <bpmn:sequenceFlow id="SequenceFlow_1k0nw85" sourceRef="parallel2" targetRef="BeforeEnd" />
-    <bpmn:parallelGateway id="parallel2">
-      <bpmn:incoming>SequenceFlow_15jqr0p</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_0661ugz</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1k0nw85</bpmn:outgoing>
-    </bpmn:parallelGateway>
-    <bpmn:task id="ParallelTask1" name="Parallel task">
-      <bpmn:incoming>SequenceFlow_0ob2x2o</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_15jqr0p</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:sequenceFlow id="SequenceFlow_0ob2x2o" sourceRef="parallel1" targetRef="ParallelTask1" />
     <bpmn:sequenceFlow id="SequenceFlow_15jqr0p" sourceRef="ParallelTask1" targetRef="parallel2" />
     <bpmn:sequenceFlow id="SequenceFlow_1r11qu9" sourceRef="parallel1" targetRef="ParallelTask2" />
@@ -87,7 +77,7 @@
     <bpmn:serviceTask id="ParallelTask2" name="Parallel task 2" camunda:expression="${services.wait}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="delay">0</camunda:inputParameter>
+          <camunda:inputParameter name="delay">10</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1r11qu9</bpmn:incoming>
@@ -98,6 +88,23 @@
       <bpmn:outgoing>SequenceFlow_1wbh23c</bpmn:outgoing>
     </bpmn:task>
     <bpmn:sequenceFlow id="SequenceFlow_1wbh23c" sourceRef="BeforeEnd" targetRef="End" />
+    <bpmn:sequenceFlow id="SequenceFlow_1k0nw85" sourceRef="parallel2" targetRef="BeforeEnd" />
+    <bpmn:parallelGateway id="parallel2">
+      <bpmn:incoming>SequenceFlow_0661ugz</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_15jqr0p</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1k0nw85</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:serviceTask id="ParallelTask1" name="Alert message" camunda:expression="${services.auth}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="username">rocket.cat</camunda:inputParameter>
+          <camunda:inputParameter name="password">Asplenium7</camunda:inputParameter>
+          <camunda:inputParameter name="body">Trop froid!</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0ob2x2o</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_15jqr0p</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
@@ -193,38 +200,22 @@
       <bpmndi:BPMNShape id="ParallelGateway_0vya85o_di" bpmnElement="parallel1">
         <dc:Bounds x="915" y="129" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="939.7380352644836" y="182" width="0" height="13" />
+          <dc:Bounds x="895" y="182" width="90" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_12879j6_di" bpmnElement="SequenceFlow_12879j6">
         <di:waypoint xsi:type="dc:Point" x="794" y="154" />
         <di:waypoint xsi:type="dc:Point" x="915" y="154" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="854.5" y="132" width="0" height="13" />
+          <dc:Bounds x="810" y="132" width="90" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1k0nw85_di" bpmnElement="SequenceFlow_1k0nw85">
-        <di:waypoint xsi:type="dc:Point" x="1238" y="154" />
-        <di:waypoint xsi:type="dc:Point" x="1357" y="154" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1297.5" y="132.5" width="0" height="13" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ParallelGateway_0qa6tr3_di" bpmnElement="parallel2">
-        <dc:Bounds x="1188" y="129" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1212.6769087523278" y="182" width="0" height="13" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_07yjgjy_di" bpmnElement="ParallelTask1">
-        <dc:Bounds x="1039.6769087523278" y="-24" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0ob2x2o_di" bpmnElement="SequenceFlow_0ob2x2o">
         <di:waypoint xsi:type="dc:Point" x="940" y="154" />
         <di:waypoint xsi:type="dc:Point" x="940" y="16" />
         <di:waypoint xsi:type="dc:Point" x="1040" y="16" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="955" y="78.5" width="0" height="13" />
+          <dc:Bounds x="910" y="78.5" width="90" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_15jqr0p_di" bpmnElement="SequenceFlow_15jqr0p">
@@ -232,7 +223,7 @@
         <di:waypoint xsi:type="dc:Point" x="1213" y="16" />
         <di:waypoint xsi:type="dc:Point" x="1213" y="129" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1176.5" y="-5.5" width="0" height="13" />
+          <dc:Bounds x="1131.5" y="-5.5" width="90" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1r11qu9_di" bpmnElement="SequenceFlow_1r11qu9">
@@ -240,7 +231,7 @@
         <di:waypoint xsi:type="dc:Point" x="940" y="274" />
         <di:waypoint xsi:type="dc:Point" x="1040" y="274" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="955" y="220" width="0" height="13" />
+          <dc:Bounds x="910" y="220" width="90" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0661ugz_di" bpmnElement="SequenceFlow_0661ugz">
@@ -248,7 +239,7 @@
         <di:waypoint xsi:type="dc:Point" x="1213" y="274" />
         <di:waypoint xsi:type="dc:Point" x="1213" y="179" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1176.5" y="252.5" width="0" height="13" />
+          <dc:Bounds x="1132" y="253" width="90" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_08wfvgw_di" bpmnElement="ParallelTask2">
@@ -264,6 +255,22 @@
           <dc:Bounds x="1530" y="132.5" width="0" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1k0nw85_di" bpmnElement="SequenceFlow_1k0nw85">
+        <di:waypoint xsi:type="dc:Point" x="1238" y="154" />
+        <di:waypoint xsi:type="dc:Point" x="1357" y="154" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1253" y="133" width="90" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ParallelGateway_0qa6tr3_di" bpmnElement="parallel2">
+        <dc:Bounds x="1188" y="129" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1168" y="182" width="90" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1tvg7wd_di" bpmnElement="ParallelTask1">
+        <dc:Bounds x="1040" y="-24" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

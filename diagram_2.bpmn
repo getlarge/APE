@@ -13,7 +13,7 @@
           <camunda:inputParameter name="url"><![CDATA[http://api.openweathermap.org/data/2.5/weather?q=Kazan,ru&appid=77326e53862fdda790be58656e73e36e&units=metric]]></camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_0cde51c</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0zoqodk</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0keajbd</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_18cywiu">
@@ -24,10 +24,6 @@
     <bpmn:sequenceFlow id="SequenceFlow_1bpjuut" name="Success" sourceRef="ExclusiveGateway_18cywiu" targetRef="parser">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="JavaScript">variables.taskInput.fetch[0].status == 200</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:task id="Task_191bfws" name="Error">
-      <bpmn:incoming>SequenceFlow_0qqaifb</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0qhxetn</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:exclusiveGateway id="ExclusiveGateway_0c57ix8">
       <bpmn:incoming>SequenceFlow_0qhxetn</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1lrmfr8</bpmn:incoming>
@@ -104,19 +100,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_0463pn6" sourceRef="ExclusiveGateway_0c57ix8" targetRef="parallel1">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="JavaScript"><![CDATA[this.variables.taskInput.parser[0]>20]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="auth" name="Validate auth" camunda:expression="${services.auth}">
-      <bpmn:extensionElements>
-        <camunda:inputOutput>
-          <camunda:inputParameter name="host">chat.getlarge.eu</camunda:inputParameter>
-          <camunda:inputParameter name="username">rocket.cat</camunda:inputParameter>
-          <camunda:inputParameter name="password">Asplenium7</camunda:inputParameter>
-        </camunda:inputOutput>
-      </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_0zoqodk</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0cde51c</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_0zoqodk" sourceRef="Start" targetRef="auth" />
-    <bpmn:sequenceFlow id="SequenceFlow_0cde51c" sourceRef="auth" targetRef="fetch" />
+    <bpmn:sequenceFlow id="SequenceFlow_0zoqodk" sourceRef="Start" targetRef="fetch" />
     <bpmn:serviceTask id="message" name="Alert message" camunda:expression="${services.auth}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
@@ -130,13 +114,17 @@
       <bpmn:outgoing>SequenceFlow_10xlge5</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_10xlge5" sourceRef="message" targetRef="BeforeEnd" />
+    <bpmn:task id="Task_191bfws" name="Error">
+      <bpmn:incoming>SequenceFlow_0qqaifb</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0qhxetn</bpmn:outgoing>
+    </bpmn:task>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="Start">
-        <dc:Bounds x="-127" y="136" width="36" height="36" />
+        <dc:Bounds x="49" y="136" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="-122" y="172" width="26" height="12" />
+          <dc:Bounds x="54" y="172" width="26" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_di" bpmnElement="End">
@@ -162,9 +150,6 @@
           <dc:Bounds x="300.94852154011386" y="26.318724497375598" width="42" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Task_191bfws_di" bpmnElement="Task_191bfws">
-        <dc:Bounds x="474" y="234" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_0c57ix8_di" bpmnElement="ExclusiveGateway_0c57ix8" isMarkerVisible="true">
         <dc:Bounds x="743.5368421052632" y="129" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -184,7 +169,7 @@
         <di:waypoint xsi:type="dc:Point" x="310" y="274" />
         <di:waypoint xsi:type="dc:Point" x="474" y="274" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="314" y="219.50520833333334" width="25" height="13" />
+          <dc:Bounds x="313" y="220" width="27" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0qhxetn_di" bpmnElement="SequenceFlow_0qhxetn">
@@ -192,7 +177,7 @@
         <di:waypoint xsi:type="dc:Point" x="671" y="154" />
         <di:waypoint xsi:type="dc:Point" x="744" y="154" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="574.5" y="174.5" width="90" height="13" />
+          <dc:Bounds x="575" y="175" width="90" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0keajbd_di" bpmnElement="SequenceFlow_0keajbd">
@@ -300,21 +285,11 @@
           <dc:Bounds x="854.5" y="133" width="0" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_14qvmsa_di" bpmnElement="auth">
-        <dc:Bounds x="-36" y="114" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0zoqodk_di" bpmnElement="SequenceFlow_0zoqodk">
-        <di:waypoint xsi:type="dc:Point" x="-91" y="154" />
-        <di:waypoint xsi:type="dc:Point" x="-36" y="154" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="-108.5" y="133" width="90" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0cde51c_di" bpmnElement="SequenceFlow_0cde51c">
-        <di:waypoint xsi:type="dc:Point" x="64" y="154" />
+        <di:waypoint xsi:type="dc:Point" x="85" y="154" />
         <di:waypoint xsi:type="dc:Point" x="138" y="154" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="101" y="133" width="0" height="12" />
+          <dc:Bounds x="66.5" y="133" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_0qtywpd_di" bpmnElement="message">
@@ -328,6 +303,9 @@
           <dc:Bounds x="1186.5" y="346" width="0" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_191bfws_di" bpmnElement="Task_191bfws">
+        <dc:Bounds x="474" y="234" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

@@ -7,7 +7,8 @@ module.exports.auth = (message, callback) => {
   scheme = scheme || 'https';
   body = body || 'me voila!';
   console.log('AUTH REQUEST SEND');
-	var Client = new RocketChat({
+	
+  const Client = new RocketChat({
 	host: host,
     port: port,
     scheme: scheme,
@@ -15,34 +16,26 @@ module.exports.auth = (message, callback) => {
     password: password
   });
 
-  var Authentication = Client.Authentication();
-  var Chat = Client.Chat();
+  const Authentication = Client.Authentication();
+  const Chat = Client.Chat();
   
-  Client.login().then(async => {
-     
-    console.log('AUTH REQUEST RECEIVED')
+  Client.login()
+    .then(() => { 
+      	console.log('AUTH REQUEST RECEIVED')
 
-    // write your API functions here
-    // example
-    Authentication.me().then((result) => {
-          var me = result;
-          console.log(me);
-    })
+        Chat.postMessage({ roomId: 'Cmhni6vpd3eCbstrA', text: body })
+        	.then(async result => {
+        		callback(null, {
+         		status: result.status,
+         		postMessage: await result,
+        		});
+    		})
 
-    // /api/v1/chat.postMessage
-    Chat.postMessage({ roomId: 'Cmhni6vpd3eCbstrA', text: body }).then((result) => {
-          var postMessage = result;
-    })
-
-    // /api/v1/logout
-    Authentication.logout().then((result) => {
-         var info = result;
-         console.log(info);
-    }) 
-
-    callback(null, {
-    });
-
-  })
-  .catch(err => callback(err));
+    	Authentication.logout()
+    		.then(async result => {
+    			console.log(result),
+    			callback(null, await result);
+    		}) 
+		})
+  	.catch(err => callback(err));
 };
