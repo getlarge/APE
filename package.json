@@ -14,8 +14,10 @@
     "camunda-bpmn-moddle": "^0.13.0",
     "lodash": "^4.17.4",
     "node-fetch": "^1.6.3",
+    "request": "^2.83.0",
     "rocketchat-nodejs": "^0.1.2",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "ws": "^3.2.0"
   },
   "devDependencies": {
     "jest": "^19.0.2"

@@ -94,7 +94,7 @@
       <bpmn:incoming>SequenceFlow_15jqr0p</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1k0nw85</bpmn:outgoing>
     </bpmn:parallelGateway>
-    <bpmn:serviceTask id="ParallelTask1" name="Alert message" camunda:expression="${services.auth}">
+    <bpmn:serviceTask id="ParallelTask1" name="Alert message" camunda:expression="${services.alert}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="username">rocket.cat</camunda:inputParameter>

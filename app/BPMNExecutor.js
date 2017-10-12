@@ -81,7 +81,7 @@ class BPMNExecutor {
           this.saveState(engine, scriptID);
           engine.stop();
         }
-        --steps;
+        --steps; // Why ?
       });
     });
   }

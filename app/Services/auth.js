@@ -2,14 +2,14 @@ const RocketChat = require('rocketchat-nodejs').Client;
 
 module.exports.auth = (message, callback) => {
   let {host, port, scheme, username, password, body} = message;
-  host = host || 'chat.getlarge.eu';
+  host = host || 'chat.aloes.io';
   port = port || 443;
   scheme = scheme || 'https';
   body = body || 'me voila!';
   console.log('AUTH REQUEST SEND');
 	
   const Client = new RocketChat({
-	host: host,
+	  host: host,
     port: port,
     scheme: scheme,
     username: username,

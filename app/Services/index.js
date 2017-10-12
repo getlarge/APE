@@ -3,6 +3,14 @@ module.exports = {
     module: __dirname + '/auth.js',
     fnName: 'auth',
   },
+  alert: {
+    module: __dirname + '/alert.js',
+    fnName: 'alert',
+  },
+  egarden: {
+    module: __dirname + '/egarden.js',
+    fnName: 'egarden',
+  },
   log: {
     module: __dirname + '/log.js',
     fnName: 'log',

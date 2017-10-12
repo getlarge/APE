@@ -10,8 +10,8 @@ module.exports.dynamicService = (input) => {
 
 function whenInput(context, next) {
  next(null);
-}
+};
 
 function noInput(context, next) {
  next(null, 1);
-}
+};
