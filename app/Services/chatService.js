@@ -1,6 +1,15 @@
 const RocketChat = require('rocketchat-nodejs').Client;
 
-function chatAuth() {
+module.exports.chatService = (message, callback) => {
+    let {host, username, password} = message;
+    host = host || 'chat.aloes.io';
+    username = username || 'rocket.cat';
+    password = password || 'password';
+
+    console.log('message :', message);
+}
+
+function ChatService() {
 
   Client = new RocketChat({
     host: 'chat.aloes.io',
@@ -16,7 +25,7 @@ function chatAuth() {
   Client.login()
 }
 
-chatAuth.prototype.send = (message, callback) => {
+ChatService.prototype.send = (message, callback) => {
 
   let {body} = message;
 
@@ -29,4 +38,4 @@ chatAuth.prototype.send = (message, callback) => {
   });
 }
 
-module.exports = new chatAuth();
+module.exports = new ChatService();

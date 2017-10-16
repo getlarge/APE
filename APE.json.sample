@@ -1,0 +1,17 @@
+{
+        "apps": [{
+                "name": "APE",
+                "max_memory_restart": "512M",
+                "log_date_format": "YYYY-MM-DD HH:mm:ss SSS",
+                "script": "index.js",
+                "exec_interpreter": "~/.nvm/versions/node/v8.12.0/bin/node",
+                "args": "--name APE",
+                "watch": ["package.json", "data/"],
+                "out_file": "log/app.log",
+                "error_file": "log/err.log",
+                "env": {
+			"DEBUG": "bpmn-engine:*"
+                }
+        }]
+}
+

@@ -1,15 +1,19 @@
 module.exports = {
-  auth: {
-    module: __dirname + '/auth.js',
-    fnName: 'auth',
+  aloesAction: {
+    module: __dirname + '/aloesAction.js',
+    fnName: 'aloesAction',
   },
-  alert: {
-    module: __dirname + '/alert.js',
-    fnName: 'alert',
+  aloesService: {
+    module: __dirname + '/aloesService.js',
+    fnName: 'aloesService',
   },
-  egarden: {
-    module: __dirname + '/egarden.js',
-    fnName: 'egarden',
+  chatAction: {
+    module: __dirname + '/chatAction.js',
+    fnName: 'chatAction',
+  },
+  chatService: {
+    module: __dirname + '/chatService.js',
+    fnName: 'chatService',
   },
   log: {
     module: __dirname + '/log.js',

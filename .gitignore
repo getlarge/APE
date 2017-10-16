@@ -6,6 +6,9 @@ tmp
 #Cache for process files 
 data/*
 
+#Log for app status 
+log/*
+
 # Code coverage results
 /coverage
 coverage*
@@ -15,6 +18,9 @@ coverage*
 
 # Compiled client resources
 /public/
+
+#PM2 config
+APE.json
 
 # Revision file
 config/_revision

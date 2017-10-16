@@ -1,23 +1,24 @@
 {
-  "name": "bpmn-stepper",
-  "version": "0.0.2",
-  "description": "Display process engine progress",
+  "name": "APE",
+  "version": "0.0.4",
+  "description": "Aloes Process Engine",
   "main": "index.js",
-  "author": "",
+  "author": "getlarge",
   "scripts": {
     "test": "jest"
   },
+  "url": "https://framagit.org/getlarge/APE/issues",
+  "email": "ed@getlarge.eu",
   "license": "ISC",
   "dependencies": {
+    "AloesApiClient": "git+https://framagit.org/eclem/AloesApiClient.git",
     "async": "^2.5.0",
     "bpmn-engine": "^4.1.2",
     "camunda-bpmn-moddle": "^0.13.0",
     "lodash": "^4.17.4",
     "node-fetch": "^1.6.3",
-    "request": "^2.83.0",
     "rocketchat-nodejs": "^0.1.2",
-    "uuid": "^3.0.1",
-    "ws": "^3.2.0"
+    "uuid": "^3.0.1"
   },
   "devDependencies": {
     "jest": "^19.0.2"
