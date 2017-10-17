@@ -1,14 +1,20 @@
 {
   "name": "APE",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Aloes Process Engine",
   "main": "index.js",
   "author": "getlarge",
   "scripts": {
     "test": "jest"
   },
-  "url": "https://framagit.org/getlarge/APE/issues",
-  "email": "ed@getlarge.eu",
+  "bugs": {
+    "url": "https://framagit.org/getlarge/ape/issues",
+    "email": "ed@getlarge.eu"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://framagit.org/getlarge/ape.git"
+  },
   "license": "ISC",
   "dependencies": {
     "AloesApiClient": "git+https://framagit.org/eclem/AloesApiClient.git",
