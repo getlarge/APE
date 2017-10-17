@@ -78,14 +78,15 @@ class BPMNExecutor {
 
       listener.on('end', (activity) => {
         if (activity.isEnd) {
-          console.log(`${activity.type} <${activity.id}> input is`, activity.getInput());
+          console.log('<!-- END -->');
+          console.log(`${activity.type} <${activity.id}>`);
           process.exit(1);
         }
       });
 
       listener.on('start', task => {
         console.log('start', task.id, steps)
-        if (steps == 0) {
+        if (!steps) {
           this.saveState(engine, scriptID);
           engine.stop();
         }
