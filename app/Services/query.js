@@ -8,6 +8,7 @@ module.exports.query = (message, callback) => {
   fetch(url, {method, body, headers})
     .then(async result => {
       console.log('FETCH RECEIVE')
+      //console.log(result.status)
       callback(null, {
         status: result.status,
         body: await result.text(),

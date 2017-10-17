@@ -127,11 +127,11 @@
       <bpmn:incoming>SequenceFlow_0xepkh0</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0kj2l57</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:endEvent id="EndEvent_1k4c0e0">
+    <bpmn:endEvent id="EndEvent_1k4c0e0" name="Notif envoyé">
       <bpmn:incoming>SequenceFlow_0kj2l57</bpmn:incoming>
       <bpmn:messageEventDefinition />
     </bpmn:endEvent>
-    <bpmn:endEvent id="EndEvent_1uvq61h">
+    <bpmn:endEvent id="EndEvent_1uvq61h" name="Notif envoyé">
       <bpmn:incoming>SequenceFlow_0r1ww7f</bpmn:incoming>
       <bpmn:messageEventDefinition />
     </bpmn:endEvent>
@@ -212,7 +212,7 @@
         <di:waypoint xsi:type="dc:Point" x="488" y="640" />
         <di:waypoint xsi:type="dc:Point" x="517" y="640" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="530" y="520" width="21" height="12" />
+          <dc:Bounds x="490" y="579" width="21" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1av7of9_di" bpmnElement="ServiceTask_NotifDeCorrectif">
@@ -377,7 +377,7 @@
       <bpmndi:BPMNShape id="EndEvent_0zllzzd_di" bpmnElement="EndEvent_1k4c0e0" bioc:stroke="#000" bioc:fill="#fff">
         <dc:Bounds x="1063" y="622" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1036" y="598" width="90" height="12" />
+          <dc:Bounds x="1049" y="662" width="64" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_11ti6zz_di" bpmnElement="SequenceFlow_Oui" bioc:stroke="#000" bioc:fill="#fff">
@@ -438,7 +438,7 @@
       <bpmndi:BPMNShape id="EndEvent_0lqm19v_di" bpmnElement="EndEvent_1uvq61h" bioc:stroke="#000" bioc:fill="#fff">
         <dc:Bounds x="1063" y="524" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1036" y="484" width="90" height="12" />
+          <dc:Bounds x="1049" y="569" width="64" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="MessageFlow_13ks0ui_di" bpmnElement="MessageFlow_13ks0ui" bioc:stroke="#000" bioc:fill="#fff">

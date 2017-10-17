@@ -1,14 +1,14 @@
-const chatService = require('./chatService');
+const chatService = require('../ChatService');
 
 module.exports.chatAction = (message, callback) => {
   let {body, roomId} = message;
   body = body || 'me voila!';
   roomId = roomId || 'Cmhni6vpd3eCbstrA';
-  console.log('AUTH REQUEST SEND');
+  console.log('SEND CHAT REQUEST ');
 
-  chatService.send(body);
-//  Notif.send(body).then(() => {
-    console.log('AUTH REQUEST RECEIVED');
+//  chatService.send(body);
+  chatService.send(body).then(() => {
+    console.log('CHAT MESSAGE SENT');
 
-//  }).catch(err => callback(err));
+  }).catch(err => callback(err));
 };

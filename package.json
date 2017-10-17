@@ -11,9 +11,9 @@
     "url": "https://framagit.org/getlarge/ape/issues",
     "email": "ed@getlarge.eu"
   },
-  "repository" : {
-    "type" : "git",
-    "url" : "https://framagit.org/getlarge/ape.git"
+  "repository": {
+    "type": "git",
+    "url": "https://framagit.org/getlarge/ape.git"
   },
   "license": "ISC",
   "dependencies": {

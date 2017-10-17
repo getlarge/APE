@@ -22,7 +22,7 @@
     <bpmn:serviceTask id="ServiceTask_Error" name="Error" camunda:expression="${services.chatAction}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="body"><![CDATA[Erreur lors de l'envoi du ping à app.getlarge.eu]]></camunda:inputParameter>
+          <camunda:inputParameter name="body"><![CDATA[Erreur lors de l'envoi de la requette snapEDA]]></camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_Error</bpmn:incoming>
@@ -36,7 +36,9 @@
     <bpmn:serviceTask id="ServiceTask_NotifSuccess" name="Notif success" camunda:expression="${services.chatAction}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="body">Ping envoyé à app.getlarge.eu</camunda:inputParameter>
+          <camunda:inputParameter name="body">
+            <camunda:script scriptFormat="Javascript">variables.taskInput.parser[0]</camunda:script>
+          </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0dp3th4</bpmn:incoming>
@@ -59,7 +61,7 @@
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="type">json</camunda:inputParameter>
-          <camunda:inputParameter name="search">results</camunda:inputParameter>
+          <camunda:inputParameter name="search">results.urlname</camunda:inputParameter>
           <camunda:inputParameter name="body">${variables.taskInput.fetch[0].body}</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
@@ -67,7 +69,7 @@
       <bpmn:outgoing>SequenceFlow_1lgw0ts</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_Sucess" name="Sucess" sourceRef="ExclusiveGateway_1946vi8" targetRef="ServiceTask_Parse_body">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">variables.taskInput.fetch[0].status == 200</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="Javascript">variables.taskInput.fetch[0].status == 200</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0dp3th4" sourceRef="ServiceTask_Log" targetRef="ServiceTask_NotifSuccess" />
     <bpmn:serviceTask id="ServiceTask_Log" name="Log " camunda:expression="${service.log}">

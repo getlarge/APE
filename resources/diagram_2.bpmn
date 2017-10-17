@@ -24,7 +24,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1bpjuut" name="Success" sourceRef="ExclusiveGateway_18cywiu" targetRef="parser">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="JavaScript">variables.taskInput.fetch[0].status == 200</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_0c57ix8">
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0c57ix8" name="Temperature ?">
       <bpmn:incoming>SequenceFlow_0qhxetn</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1lrmfr8</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1c9dk9a</bpmn:outgoing>
@@ -66,7 +66,7 @@
       <bpmn:outgoing>SequenceFlow_1wbh23c</bpmn:outgoing>
     </bpmn:task>
     <bpmn:sequenceFlow id="SequenceFlow_1wbh23c" sourceRef="BeforeEnd" targetRef="End" />
-    <bpmn:sequenceFlow id="SequenceFlow_1c9dk9a" sourceRef="ExclusiveGateway_0c57ix8" targetRef="message">
+    <bpmn:sequenceFlow id="SequenceFlow_1c9dk9a" name="&#60;20°C" sourceRef="ExclusiveGateway_0c57ix8" targetRef="message">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="JavaScript"><![CDATA[this.variables.taskInput.parser[0]<20]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:serviceTask id="ParallelTask2" name="Parallel task 2" camunda:expression="${services.wait}">
@@ -97,16 +97,13 @@
     </bpmn:parallelGateway>
     <bpmn:sequenceFlow id="SequenceFlow_1r11qu9" sourceRef="parallel1" targetRef="ParallelTask2" />
     <bpmn:sequenceFlow id="SequenceFlow_0ob2x2o" sourceRef="parallel1" targetRef="ParallelTask1" />
-    <bpmn:sequenceFlow id="SequenceFlow_0463pn6" sourceRef="ExclusiveGateway_0c57ix8" targetRef="parallel1">
+    <bpmn:sequenceFlow id="SequenceFlow_0463pn6" name="&#62;20°C" sourceRef="ExclusiveGateway_0c57ix8" targetRef="parallel1">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="JavaScript"><![CDATA[this.variables.taskInput.parser[0]>20]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0zoqodk" sourceRef="Start" targetRef="fetch" />
-    <bpmn:serviceTask id="message" name="Alert message" camunda:expression="${services.auth}">
+    <bpmn:serviceTask id="message" name="Alert message" camunda:expression="${services.chatAction}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="host">chat.getlarge.eu</camunda:inputParameter>
-          <camunda:inputParameter name="username">rocket.cat</camunda:inputParameter>
-          <camunda:inputParameter name="password">Asplenium7</camunda:inputParameter>
           <camunda:inputParameter name="body">Trop froid!</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
@@ -153,7 +150,7 @@
       <bpmndi:BPMNShape id="ExclusiveGateway_0c57ix8_di" bpmnElement="ExclusiveGateway_0c57ix8" isMarkerVisible="true">
         <dc:Bounds x="743.5368421052632" y="129" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="768.5368421052632" y="182" width="0" height="13" />
+          <dc:Bounds x="733" y="182" width="73" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1lrmfr8_di" bpmnElement="SequenceFlow_1lrmfr8">
@@ -218,7 +215,7 @@
         <di:waypoint xsi:type="dc:Point" x="898" y="298" />
         <di:waypoint xsi:type="dc:Point" x="898" y="322" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="779" y="252.5" width="90" height="12" />
+          <dc:Bounds x="807" y="253" width="34" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_08wfvgw_di" bpmnElement="ParallelTask2">
@@ -282,7 +279,7 @@
         <di:waypoint xsi:type="dc:Point" x="794" y="154" />
         <di:waypoint xsi:type="dc:Point" x="915" y="154" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="854.5" y="133" width="0" height="12" />
+          <dc:Bounds x="838" y="133" width="34" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0zoqodk_di" bpmnElement="SequenceFlow_0zoqodk">

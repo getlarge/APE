@@ -20,10 +20,6 @@
       <bpmn:outgoing>SequenceFlow_Error</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_008j36t" sourceRef="ServiceTask_GetWeather" targetRef="ExclusiveGateway_1rud917" />
-    <bpmn:task id="Task_Error" name="Error">
-      <bpmn:incoming>SequenceFlow_Error</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_16onn74</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:sequenceFlow id="SequenceFlow_Success" name="success" sourceRef="ExclusiveGateway_1rud917" targetRef="ServiceTask_ParseBody">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="JavaScript">variables.taskInput.fetch[0].status == 200</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -61,12 +57,12 @@
     <bpmn:sequenceFlow id="SequenceFlow_0ica9vp" sourceRef="ServiceTask_ParseBody" targetRef="ServiceTask_LogWeather" />
     <bpmn:sequenceFlow id="SequenceFlow_0827y5w" sourceRef="ServiceTask_LogWeather" targetRef="ExclusiveGateway_1uarnk4" />
     <bpmn:sequenceFlow id="SequenceFlow_16onn74" sourceRef="Task_Error" targetRef="ExclusiveGateway_1uarnk4" />
-    <bpmn:serviceTask id="ServiceTask_Alert" name="Alert" camunda:expression="${services.auth}">
+    <bpmn:serviceTask id="ServiceTask_Alert" name="Alert" camunda:expression="${services.chatAction}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="username">rocket.cat</camunda:inputParameter>
-          <camunda:inputParameter name="password">Asplenium7</camunda:inputParameter>
-          <camunda:inputParameter name="body">Trop froid</camunda:inputParameter>
+          <camunda:inputParameter name="body">
+            <camunda:script scriptFormat="Javascript">variables.taskInput.parser[0]</camunda:script>
+          </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1uxt5iz</bpmn:incoming>
@@ -93,6 +89,15 @@
     <bpmn:sequenceFlow id="SequenceFlow_0d99nh7" sourceRef="ServiceTask_Alert" targetRef="ServiceTask_Wait" />
     <bpmn:sequenceFlow id="SequenceFlow_10g8xfk" sourceRef="ServiceTask_Wait" targetRef="Task_BeforeEnd" />
     <bpmn:sequenceFlow id="SequenceFlow_1uxt5iz" sourceRef="ExclusiveGateway_1uarnk4" targetRef="ServiceTask_Alert" />
+    <bpmn:serviceTask id="Task_Error" name="Error" camunda:expression="${services.chatAction}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="body">erreur de requete</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_Error</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_16onn74</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
@@ -122,9 +127,6 @@
           <dc:Bounds x="380" y="99" width="0" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Task_0zt2hlj_di" bpmnElement="Task_Error">
-        <dc:Bounds x="503" y="206" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0mm9tj5_di" bpmnElement="SequenceFlow_Success">
         <di:waypoint xsi:type="dc:Point" x="432" y="95" />
         <di:waypoint xsi:type="dc:Point" x="432" y="29" />
@@ -173,7 +175,7 @@
         <di:waypoint xsi:type="dc:Point" x="553" y="145" />
         <di:waypoint xsi:type="dc:Point" x="762" y="145" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="568" y="169.5" width="0" height="12" />
+          <dc:Bounds x="523" y="169.5" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1xgpwew_di" bpmnElement="ServiceTask_Alert">
@@ -219,6 +221,9 @@
           <dc:Bounds x="837" y="124" width="0" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0nmb6ht_di" bpmnElement="Task_Error">
+        <dc:Bounds x="503" y="206" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
