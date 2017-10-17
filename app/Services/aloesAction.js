@@ -1,15 +1,14 @@
+const AloesService = require('../AloesService');
+
 module.exports.aloesAction = (message, callback) => {
+
+	console.log(message);
 
 	let {action, deviceId} = message;
   	action = action || 'ping';
   	deviceId = deviceId || '';
 
-	const AloesService = require('../AloesService');
 
-	setTimeout( () => {
-        
-       	AloesService.send({'action': action, 'deviceId': deviceId});
-
-	}, 3000);
+    AloesService.send({'action': action, 'deviceId': deviceId});
 
 };

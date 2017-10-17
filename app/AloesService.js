@@ -1,4 +1,5 @@
 const AloesApiClient = require('AloesApiClient');
+const EventEmitter = require('events');
 
 function isJson(str) {
     try { JSON.parse(str) }
@@ -6,52 +7,61 @@ function isJson(str) {
     return true;
 }
 
-function AloesService() {
 
-    client = new AloesApiClient({
-        host: 'app.getlarge.eu',
-        port: '443',
-        username: 'user',
-        password: 'password',
-        secure: true,
-        debug: true
-    });
+class AloesService extends EventEmitter {
+    constructor() {
+        super();
+        this.client = new AloesApiClient({
+            host: 'app.getlarge.eu',
+            port: '443',
+            username: 'user',
+            password: 'password',
+            secure: true,
+            debug: true
+        });
 
-    client.connect( () => {
+        this.client.connect( () => {
 
-        client.onmessage = message => {
+            this.emit('connected');
 
-            if (isJson(message)) {
+            this.client.onmessage = message => {
+                    if (isJson(message)) {
 
-                message = JSON.parse(message);
+                        message = JSON.parse(message);
 
-                switch (message.content) {
+                        switch (message.content) {
 
-                    case 'pong':
-                        console.log('pong')
-                        break;
+                            case 'pong':
+                                console.log('pong')
+                                break;
 
-                    case 'shownDevice':
-                        console.log(message)
-                        break;
+                            case 'shownDevice':
+                                console.log(message)
+                                break;
 
-                    default:
-                        console.log('unknown message :', message);
+                            default:
+                                console.log('unknown message :', message);
+                        };
+                    }
                 };
-            }
-        };
-    });
-}
+            });
+        }   
 
-AloesService.prototype.send = message => {
 
-    client.send(message, err => {
+        send(message) {
+            console.log(message);
 
-        if (err) {
+            this.client.send(message, err => {
 
-            console.log('send error:', err);
+                if (err) {
+
+                    console.log('send error:', err);
+                }
+            
+            });
+
         }
-    });
-}
+    }
+
 
 module.exports = new AloesService();
