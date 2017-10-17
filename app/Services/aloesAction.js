@@ -9,6 +9,9 @@ module.exports.aloesAction = (message, callback) => {
   	deviceId = deviceId || '';
 
 
-    AloesService.send({'action': action, 'deviceId': deviceId});
+    AloesService.send({'action': action, 'deviceId': deviceId}, () => {
+    	console.log('callback');
+    	callback();
+    });
 
 };

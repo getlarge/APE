@@ -13,6 +13,7 @@ class SimpleStorage {
       return null;
     }
     const data = fs.readFileSync(this._getFileByKey(key)).toString();
+    
     return JSON.parse(data);
   }
 

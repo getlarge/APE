@@ -64,7 +64,7 @@ class BPMNExecutor {
         engine.execute(this.getOptions(payload, listener));
       }
 
-      engine.on('end', () => {
+      engine.once('end', () => {
         console.log('End of step')
         resolve()
       });
@@ -75,9 +75,17 @@ class BPMNExecutor {
       listener.on('leave', task => {
         console.log('leave', task.id)
       });
+
+      listener.on('end', (activity) => {
+        if (activity.isEnd) {
+          console.log(`${activity.type} <${activity.id}> input is`, activity.getInput());
+          process.exit(1);
+        }
+      });
+
       listener.on('start', task => {
-        console.log('start', task.id)
-        if (!steps) {
+        console.log('start', task.id, steps)
+        if (steps == 0) {
           this.saveState(engine, scriptID);
           engine.stop();
         }

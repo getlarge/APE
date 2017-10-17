@@ -48,16 +48,18 @@ class AloesService extends EventEmitter {
         }   
 
 
-        send(message) {
-            console.log(message);
+        send(message, callback) {
+            console.log('test');
 
             this.client.send(message, err => {
 
                 if (err) {
 
                     console.log('send error:', err);
+
                 }
             
+                callback();
             });
 
         }

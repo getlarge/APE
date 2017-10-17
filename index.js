@@ -5,11 +5,6 @@ const storage = require('./app/SimpleStorage');
 const aloesService = require('./app/AloesService');
 const chatService = require('./app/ChatService');
 
-const executor = new BPMNExecutor(queue, storage);
-//const xml1 = fs.readFileSync(__dirname + '/resources/diagram_1.bpmn').toString();
-const xml2 = fs.readFileSync(__dirname + '/resources/diagram_5.bpmn').toString();
-
-//const proccess1 = executor.runProccess(xml1, {}, 'process1');
 
 let servicesConnected = 0;
 
@@ -25,7 +20,8 @@ aloesService.on('connected', () => {
 
 let init = (servicesConnected) => {
 	if(servicesConnected > 1) {
-		const proccess2 = executor.runProccess(xml2, {}, 'process2');
+		const executor = new BPMNExecutor(queue, storage);
+		const proccess2 = executor.runProccess(fs.readFileSync(__dirname + '/resources/diagram_5.bpmn').toString(), {}, 'process2');
 	}
 };
 

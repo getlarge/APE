@@ -9,6 +9,6 @@ module.exports.chatAction = (message, callback) => {
 //  chatService.send(body);
   chatService.send(body).then((status) => {
     console.log('CHAT MESSAGE SENT', status);
-
+    callback();
   }).catch(err => callback(err));
 };
