@@ -64,28 +64,53 @@ class BPMNExecutor {
         engine.execute(this.getOptions(payload, listener));
       }
 
-      engine.once('end', () => {
-        console.log('End of step')
+      engine.once('end', (task, def) => {
+        console.log('End of step', def.variables);
         resolve()
       });
+
+      //engine.once('end', () => {
+      //  console.log('End of step')
+      //  resolve()
+      //});
+
       engine.on('error', e => {
         console.log('ERROR: ', e);
         resolve();
       });
+
       listener.on('leave', task => {
         console.log('leave', task.id)
-      });
-
-      listener.on('end', (activity) => {
-        if (activity.isEnd) {
+        if (task.type === 'bpmn:EndEvent') {
+          resolve({
+            type: 'end',
+            result: 'toto' // message = object of «input parameter : value» pairs
+          })
+         // console.log(this.result);
           console.log('<!-- END -->');
-          console.log(`${activity.type} <${activity.id}>`);
+          this.saveState(engine, scriptID);
+          engine.stop();
           process.exit(1);
         }
       });
 
+      //listener.once('wait', (task) => {
+      //  console.log(`${task.type} <${task.id}>`);
+      //  engine.signal(task.id);
+      //});
+      
+      //listener.on('end', (task) => {
+          //console.log(`${task.type} <${task.id}>`);
+      //});
+
+      listener.on('wait-userTask', (task, instance) => {
+        console.log(`${task.type} <${task.id}> of ${instance.id} is waiting for input`);
+        task.signal('don´t wait for me');
+      });
+
       listener.on('start', task => {
-        console.log('start', task.id, steps)
+        console.log('start', `${task.type} <${task.id}>`, steps);
+        //console.log(task.getPropertyValue);
         if (!steps) {
           this.saveState(engine, scriptID);
           engine.stop();

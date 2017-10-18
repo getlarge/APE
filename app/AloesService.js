@@ -35,7 +35,7 @@ class AloesService extends EventEmitter {
                                 console.log('pong')
                                 break;
 
-                            case 'shownDevice':
+                            case 'getDevice':
                                 console.log(message)
                                 break;
 
@@ -49,7 +49,7 @@ class AloesService extends EventEmitter {
 
 
         send(message, callback) {
-            console.log('test');
+           // console.log('test');
 
             this.client.send(message, err => {
 

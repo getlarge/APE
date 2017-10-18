@@ -21,7 +21,8 @@ aloesService.on('connected', () => {
 let init = (servicesConnected) => {
 	if(servicesConnected > 1) {
 		const executor = new BPMNExecutor(queue, storage);
-		const proccess2 = executor.runProccess(fs.readFileSync(__dirname + '/resources/diagram_5.bpmn').toString(), {}, 'process2');
+		//const proccess1 = executor.runProccess(fs.readFileSync(__dirname + '/resources/diagram_5.bpmn').toString(), {}, 'process1');
+		const proccess2 = executor.runProccess(fs.readFileSync(__dirname + '/resources/loop.bpmn').toString(), {}, 'process2');
 	}
 };
 

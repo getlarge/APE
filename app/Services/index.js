@@ -15,6 +15,10 @@ module.exports = {
     module: __dirname + '/chatService.js',
     fnName: 'chatService',
   },
+  dynamicService: {
+    module: __dirname + '/dynamicService.js',
+    fnName: 'dynamicService',
+  },
   log: {
     module: __dirname + '/log.js',
     fnName: 'log',

@@ -1,6 +1,6 @@
 {
   "name": "APE",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Aloes Process Engine",
   "main": "index.js",
   "author": "getlarge",
@@ -19,7 +19,7 @@
   "dependencies": {
     "AloesApiClient": "git+https://framagit.org/eclem/AloesApiClient.git",
     "async": "^2.5.0",
-    "bpmn-engine": "^4.1.2",
+    "bpmn-engine": "git://github.com/paed01/bpmn-engine.git#develop",
     "camunda-bpmn-moddle": "^0.13.0",
     "lodash": "^4.17.4",
     "node-fetch": "^1.6.3",

@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
   <bpmn:process id="Process_1" isExecutable="true">
-    <bpmn:startEvent id="StartEvent_1">
+    <bpmn:startEvent id="start">
       <bpmn:outgoing>SequenceFlow_14lpour</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:serviceTask id="Task_1wpcicu" name="ping aloes" camunda:expression="${services.aloesAction}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="action">getUser</camunda:inputParameter>
+          <camunda:inputParameter name="action">ping</camunda:inputParameter>
+          <camunda:outputParameter name="output">
+            <camunda:script scriptFormat="javascript">services.aloesAction.action</camunda:script>
+          </camunda:outputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_14lpour</bpmn:incoming>
@@ -16,63 +19,62 @@
     <bpmn:serviceTask id="Task_0ycjdbk" name="Notif Aloes" camunda:expression="${services.chatAction}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="body">toto</camunda:inputParameter>
+          <camunda:inputParameter name="body">
+            <camunda:script scriptFormat="javascript">services.aloesAction.action</camunda:script>
+          </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0lvfwz4</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0e6cac4</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:endEvent id="EndEvent_0ljv67o">
+    <bpmn:endEvent id="end">
       <bpmn:incoming>SequenceFlow_0e6cac4</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_14lpour" sourceRef="StartEvent_1" targetRef="Task_1wpcicu" />
-    <bpmn:sequenceFlow id="SequenceFlow_0e6cac4" sourceRef="Task_0ycjdbk" targetRef="EndEvent_0ljv67o" />
+    <bpmn:sequenceFlow id="SequenceFlow_14lpour" sourceRef="start" targetRef="Task_1wpcicu" />
+    <bpmn:sequenceFlow id="SequenceFlow_0e6cac4" sourceRef="Task_0ycjdbk" targetRef="end" />
     <bpmn:sequenceFlow id="SequenceFlow_0lvfwz4" sourceRef="Task_1wpcicu" targetRef="Task_0ycjdbk" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1" bioc:stroke="#000" bioc:fill="#fff">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="start" bioc:stroke="#000" bioc:fill="#fff">
         <dc:Bounds x="173" y="218" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="146" y="254" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_1pk81j3_di" bpmnElement="Task_1wpcicu">
-        <dc:Bounds x="345" y="271" width="100" height="80" />
+        <dc:Bounds x="328" y="196" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_1f0pofs_di" bpmnElement="Task_0ycjdbk">
-        <dc:Bounds x="606" y="178" width="100" height="80" />
+        <dc:Bounds x="519" y="196" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="EndEvent_0ljv67o_di" bpmnElement="EndEvent_0ljv67o" bioc:stroke="#000" bioc:fill="#fff">
-        <dc:Bounds x="878" y="218" width="36" height="36" />
+      <bpmndi:BPMNShape id="EndEvent_0ljv67o_di" bpmnElement="end" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="684" y="218" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="896" y="258" width="0" height="12" />
+          <dc:Bounds x="657" y="258" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_14lpour_di" bpmnElement="SequenceFlow_14lpour">
         <di:waypoint xsi:type="dc:Point" x="209" y="236" />
         <di:waypoint xsi:type="dc:Point" x="291" y="236" />
-        <di:waypoint xsi:type="dc:Point" x="291" y="311" />
-        <di:waypoint xsi:type="dc:Point" x="345" y="311" />
+        <di:waypoint xsi:type="dc:Point" x="291" y="236" />
+        <di:waypoint xsi:type="dc:Point" x="328" y="236" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="306" y="267.5" width="0" height="12" />
+          <dc:Bounds x="261" y="230" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0e6cac4_di" bpmnElement="SequenceFlow_0e6cac4">
-        <di:waypoint xsi:type="dc:Point" x="706" y="219" />
-        <di:waypoint xsi:type="dc:Point" x="741" y="311" />
-        <di:waypoint xsi:type="dc:Point" x="741" y="236" />
-        <di:waypoint xsi:type="dc:Point" x="878" y="236" />
+        <di:waypoint xsi:type="dc:Point" x="619" y="236" />
+        <di:waypoint xsi:type="dc:Point" x="684" y="236" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="756" y="267.5" width="0" height="12" />
+          <dc:Bounds x="606.5" y="215" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0lvfwz4_di" bpmnElement="SequenceFlow_0lvfwz4">
-        <di:waypoint xsi:type="dc:Point" x="445" y="307" />
-        <di:waypoint xsi:type="dc:Point" x="526" y="218" />
-        <di:waypoint xsi:type="dc:Point" x="606" y="218" />
+        <di:waypoint xsi:type="dc:Point" x="428" y="236" />
+        <di:waypoint xsi:type="dc:Point" x="519" y="236" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="485.5" y="241.5" width="0" height="12" />
+          <dc:Bounds x="428.5" y="215" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
