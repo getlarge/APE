@@ -1,0 +1,76 @@
+const Kraken = require('kraken-exchange');
+//const kraken = require('kraken-exchange-api');
+const EventEmitter = require('events');
+const conf = require('../config');
+
+class KrakenService extends EventEmitter {
+  	constructor() {
+    	super();
+    	this.client = new Kraken(conf.KrakenService.key, conf.KrakenService.secret);
+      this.emit('connected');
+    }
+
+
+	getTime() {
+    	return new Promise((resolve, reject) => {
+    		this.client.time()
+        	.then(result => {
+        		resolve({
+            		status: result.status,
+            		time: result,
+          		})
+          		console.log('Kraken -', response);
+      		}).catch((e) => {
+        		reject(e);
+      		});
+    	})
+    }
+
+    getBalance() {
+    	return new Promise((resolve, reject) => {
+    		this.client.balnce()
+        	.then(result => {
+        		resolve({
+            		status: result.status,
+            		balance: result,
+          		})
+              console.log('Kraken -', response);
+      		}).catch((e) => {
+        		reject(e);
+      		});
+    	})
+    }
+
+    getAssets(pair) {
+    	return new Promise((resolve, reject) => {
+    		this.client.assets(pair)
+        	.then(result => {
+        		resolve({
+            		status: result.status,
+            		assets: result,
+          		})
+              console.log('Kraken -', response);
+      		}).catch((e) => {
+        		reject(e);
+      		});
+    	})
+    }
+
+	getTicker(pair) {
+		return new Promise((resolve, reject) => {
+    		this.client.ticker(pair)
+        	.then(result => {
+        		resolve({
+            		status: result.status,
+            		ticker: result,
+          		})
+              console.log('Kraken -', response);
+      		}).catch((e) => {
+        		reject(e);
+      		});
+    	})
+    }
+
+}
+
+module.exports = new KrakenService();

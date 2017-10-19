@@ -4,18 +4,6 @@
     <bpmn:startEvent id="start">
       <bpmn:outgoing>SequenceFlow_14lpour</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:serviceTask id="Task_1wpcicu" name="ping aloes" camunda:expression="${services.aloesAction}">
-      <bpmn:extensionElements>
-        <camunda:inputOutput>
-          <camunda:inputParameter name="action">ping</camunda:inputParameter>
-          <camunda:outputParameter name="output">
-            <camunda:script scriptFormat="javascript">services.aloesAction.action</camunda:script>
-          </camunda:outputParameter>
-        </camunda:inputOutput>
-      </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_14lpour</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0lvfwz4</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:serviceTask id="Task_0ycjdbk" name="Notif Aloes" camunda:expression="${services.chatAction}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
@@ -24,15 +12,30 @@
           </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_0lvfwz4</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0v9nop5</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0e6cac4</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:endEvent id="end">
       <bpmn:incoming>SequenceFlow_0e6cac4</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_14lpour" sourceRef="start" targetRef="Task_1wpcicu" />
+    <bpmn:sequenceFlow id="SequenceFlow_14lpour" sourceRef="start" targetRef="Task_0sa83lj" />
     <bpmn:sequenceFlow id="SequenceFlow_0e6cac4" sourceRef="Task_0ycjdbk" targetRef="end" />
-    <bpmn:sequenceFlow id="SequenceFlow_0lvfwz4" sourceRef="Task_1wpcicu" targetRef="Task_0ycjdbk" />
+    <bpmn:sequenceFlow id="SequenceFlow_0v9nop5" sourceRef="Task_0sa83lj" targetRef="Task_0ycjdbk" />
+    <bpmn:serviceTask id="Task_0sa83lj" name="Kraken Ticker" camunda:expression="${services.krakenAction}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="action">Balance</camunda:inputParameter>
+          <camunda:inputParameter name="pair">
+            <camunda:list>
+              <camunda:value>XBTEUR</camunda:value>
+              <camunda:value>ETHEUR</camunda:value>
+            </camunda:list>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_14lpour</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0v9nop5</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
@@ -41,9 +44,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="146" y="254" width="90" height="20" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_1pk81j3_di" bpmnElement="Task_1wpcicu">
-        <dc:Bounds x="328" y="196" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_1f0pofs_di" bpmnElement="Task_0ycjdbk">
         <dc:Bounds x="519" y="196" width="100" height="80" />
@@ -56,11 +56,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_14lpour_di" bpmnElement="SequenceFlow_14lpour">
         <di:waypoint xsi:type="dc:Point" x="209" y="236" />
-        <di:waypoint xsi:type="dc:Point" x="291" y="236" />
-        <di:waypoint xsi:type="dc:Point" x="291" y="236" />
-        <di:waypoint xsi:type="dc:Point" x="328" y="236" />
+        <di:waypoint xsi:type="dc:Point" x="290" y="236" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="261" y="230" width="90" height="12" />
+          <dc:Bounds x="204.5" y="215" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0e6cac4_di" bpmnElement="SequenceFlow_0e6cac4">
@@ -70,13 +68,16 @@
           <dc:Bounds x="606.5" y="215" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0lvfwz4_di" bpmnElement="SequenceFlow_0lvfwz4">
-        <di:waypoint xsi:type="dc:Point" x="428" y="236" />
+      <bpmndi:BPMNEdge id="SequenceFlow_0v9nop5_di" bpmnElement="SequenceFlow_0v9nop5">
+        <di:waypoint xsi:type="dc:Point" x="390" y="236" />
         <di:waypoint xsi:type="dc:Point" x="519" y="236" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="428.5" y="215" width="90" height="12" />
+          <dc:Bounds x="454.5" y="215" width="0" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1ese946_di" bpmnElement="Task_0sa83lj">
+        <dc:Bounds x="290" y="196" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

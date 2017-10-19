@@ -3,24 +3,21 @@ node_modules
 npm-debug.log
 tmp
 
-#Cache for process files 
+# Cache for process files 
 data/*
 
-#Log for app status 
+# Log for app status 
 log/*
-
-# Code coverage results
-/coverage
-coverage*
-
-# Built package
-/*.tgz
 
 # Compiled client resources
 /public/
 
 #PM2 config
 APE.json
+
+# Personnal config
+config.dev.js
+config.js
 
 # Revision file
 config/_revision

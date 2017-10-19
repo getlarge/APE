@@ -19,6 +19,10 @@ module.exports = {
     module: __dirname + '/dynamicService.js',
     fnName: 'dynamicService',
   },
+  krakenAction: {
+   module: __dirname + '/krakenAction.js',
+    fnName: 'krakenAction',
+  },
   log: {
     module: __dirname + '/log.js',
     fnName: 'log',

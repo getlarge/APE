@@ -1,12 +1,16 @@
 const RocketChat = require('rocketchat-nodejs').Client;
 const EventEmitter = require('events');
+const conf = require('../config');
+
 const Client = new RocketChat({
-  host: 'chat.aloes.io',
-  port: 443,
-  scheme: 'https',
-  username: 'rocket.cat',
-  password: 'Asplenium7'
+  host: conf.ChatService.host,
+  port: conf.ChatService.port,
+  scheme: conf.ChatService.scheme,
+  username: conf.ChatService.username,
+  password: conf.ChatService.password
 });
+
+const Users = Client.Users();
 
 class ChatService extends EventEmitter {
   constructor() {
@@ -14,13 +18,27 @@ class ChatService extends EventEmitter {
     Client.login().then(() => {
       this.emit('connected');
     }).catch((error) => {
-      console.log(error);
+      console.log('Rocketchat -', error);
     });
   }
 
-  send(message) {
+  channelsList() {
     return new Promise((resolve, reject) => {
-      Client.Chat().postMessage({ roomId: 'Cmhni6vpd3eCbstrA', text: message })
+      Channels.list()
+        .then(result => {
+          resolve({
+            status: result.status,
+            list: result,
+          })
+      }).catch((e) => {
+        reject(e);
+      });
+    })
+  }
+
+  send(roomId, message) {
+    return new Promise((resolve, reject) => {
+      Client.Chat().postMessage({ roomId: roomId, text: message })
         .then(result => {
           resolve({
             status: result.status,
@@ -31,6 +49,21 @@ class ChatService extends EventEmitter {
       });
     })
   }
+
+  userPresence(userId) {
+    return new Promise((resolve, reject) => {
+      Users.getPresence({ userId: userId })
+        .then(result => {
+          resolve({
+            status: result.status,
+            getPresence: result,
+          })
+      }).catch((e) => {
+        reject(e);
+      });
+    })
+  }
+
 }
 
 module.exports = new ChatService();

@@ -1,5 +1,6 @@
 const AloesApiClient = require('AloesApiClient');
 const EventEmitter = require('events');
+const conf = require('../config');
 
 function isJson(str) {
     try { JSON.parse(str) }
@@ -12,11 +13,11 @@ class AloesService extends EventEmitter {
     constructor() {
         super();
         this.client = new AloesApiClient({
-            host: 'app.getlarge.eu',
-            port: '443',
-            username: 'user',
-            password: 'password',
-            secure: true,
+            host: conf.AloesService.host,
+            port: conf.AloesService.port,
+            username: conf.AloesService.username,
+            password: conf.AloesService.password,
+            secure: conf.AloesService.secure,
             debug: true
         });
 
@@ -32,15 +33,23 @@ class AloesService extends EventEmitter {
                         switch (message.content) {
 
                             case 'pong':
-                                console.log('pong')
+                                console.log('Aloes - pong');
                                 break;
 
-                            case 'getDevice':
-                                console.log(message)
+                            case 'devicesList':
+                                console.log('Aloes - Devices list:', message);
+                                break;
+
+                            case 'sensorsList':
+                                console.log('Aloes - Sensors list:', message);
+                                break;
+
+                           case 'userInfo':
+                                console.log('Aloes - User info:', message);
                                 break;
 
                             default:
-                                console.log('unknown message :', message);
+                                console.log('Aloes - unknown message :', message);
                         };
                     }
                 };
@@ -49,7 +58,6 @@ class AloesService extends EventEmitter {
 
 
         send(message, callback) {
-           // console.log('test');
 
             this.client.send(message, err => {
 
@@ -63,6 +71,24 @@ class AloesService extends EventEmitter {
             });
 
         }
+
+
+//        Send(roomId, message) {
+//            return new Promise((resolve, reject) => {
+//                this.client.send(message)
+//                .then(result => {
+//                    resolve({
+//                        status: result.status,
+//                        response: result,
+//                    })
+//                }).catch(err => {
+//                    if (err) {
+//                    console.log('send error:', err);
+//                    }
+//                    callback();
+//                });
+//            })
+//        }
     }
 
 

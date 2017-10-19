@@ -21,6 +21,8 @@
     "async": "^2.5.0",
     "bpmn-engine": "git://github.com/paed01/bpmn-engine.git#develop",
     "camunda-bpmn-moddle": "^0.13.0",
+    "kraken-exchange-api": "^1.0.0",
+    "kraken-exchange": "^1.3.0",
     "lodash": "^4.17.4",
     "node-fetch": "^1.6.3",
     "rocketchat-nodejs": "^0.1.2",

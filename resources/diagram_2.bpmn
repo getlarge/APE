@@ -22,7 +22,7 @@
       <bpmn:outgoing>SequenceFlow_0qqaifb</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_1bpjuut" name="Success" sourceRef="ExclusiveGateway_18cywiu" targetRef="parser">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="JavaScript">variables.taskInput.fetch[0].status == 200</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="JavaScript">this.variables.taskInput.fetch[0].status == 200</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:exclusiveGateway id="ExclusiveGateway_0c57ix8" name="Temperature ?">
       <bpmn:incoming>SequenceFlow_0qhxetn</bpmn:incoming>
@@ -32,7 +32,7 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_1lrmfr8" sourceRef="logWeather" targetRef="ExclusiveGateway_0c57ix8" />
     <bpmn:sequenceFlow id="SequenceFlow_0qqaifb" name="Error" sourceRef="ExclusiveGateway_18cywiu" targetRef="Task_191bfws">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="JavaScript">variables.taskInput.fetch[0].status != 200</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="JavaScript">this.variables.taskInput.fetch[0].status != 200</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0qhxetn" sourceRef="Task_191bfws" targetRef="ExclusiveGateway_0c57ix8" />
     <bpmn:sequenceFlow id="SequenceFlow_0keajbd" sourceRef="fetch" targetRef="ExclusiveGateway_18cywiu" />

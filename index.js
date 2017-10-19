@@ -4,16 +4,21 @@ const queue = require('./app/SimpleQueue');
 const storage = require('./app/SimpleStorage');
 const aloesService = require('./app/AloesService');
 const chatService = require('./app/ChatService');
-
+const krakenService = require('./app/KrakenService');
 
 let servicesConnected = 0;
+
+aloesService.on('connected', () => {
+	servicesConnected++;
+	init(servicesConnected);
+});
 
 chatService.on('connected', () => {
 	servicesConnected++;
 	init(servicesConnected);
 });
 
-aloesService.on('connected', () => {
+krakenService.on('connected', () => {
 	servicesConnected++;
 	init(servicesConnected);
 });
@@ -21,8 +26,8 @@ aloesService.on('connected', () => {
 let init = (servicesConnected) => {
 	if(servicesConnected > 1) {
 		const executor = new BPMNExecutor(queue, storage);
-		//const proccess1 = executor.runProccess(fs.readFileSync(__dirname + '/resources/diagram_5.bpmn').toString(), {}, 'process1');
-		const proccess2 = executor.runProccess(fs.readFileSync(__dirname + '/resources/loop.bpmn').toString(), {}, 'process2');
+		const proccess1 = executor.runProccess(fs.readFileSync(__dirname + '/resources/diagram_3.bpmn').toString(), {}, 'process1');
+		//const proccess2 = executor.runProccess(fs.readFileSync(__dirname + '/resources/variables-output.bpmn').toString(), {}, 'process2');
 	}
 };
 
