@@ -25,6 +25,7 @@ class BPMNExecutor {
     });
   }
 
+  //getOptions(variables = {noun: 'tea'}, listener) {
   getOptions(variables = {}, listener) {
     return {
       variables,
@@ -53,6 +54,8 @@ class BPMNExecutor {
         // Has saved state -- resume execution
         const state = this.storage.get(`state_${scriptID}`);
         // @TODO hydrate state by camundaState and xml
+
+
         engine = Bpmn.Engine.resume(state, this.getOptions(payload, listener));
       } else {
         engine = new Bpmn.Engine({
@@ -62,22 +65,22 @@ class BPMNExecutor {
             camunda: require('camunda-bpmn-moddle/resources/camunda'),
           },
         });
-        //engine.execute(this.getOptions(payload, listener));
-        engine.execute(this.getOptions(payload, listener),(err) => {
-          if (err) console.log(err)
-        });
+        engine.execute(this.getOptions(payload, listener));
       }
 
       engine.once('end', (def) => {
-        console.log('End of step', def.variables);
+        console.log('End of step', def.getOutput());
         resolve()
       });
 
-      engine.on('error', e => {
-        console.log('ERROR: ', e);
+      engine.on('error', (e, source) => {
+        console.log('ERROR : ', e, '| SOURCE :', source);
         resolve();
       });
 
+//// EVENT LISTENERS /////
+
+//// START ////      
       listener.on('start', task => {
                       
         switch(task.type) {
@@ -85,12 +88,18 @@ class BPMNExecutor {
           case 'bpmn:Process':
             if (stepsCounter == 0) {
               console.log('<!-- START APE -->');
+              engine.getDefinitions((err, definitions) => {
+              if (err) throw err;
+                console.log('Loaded', definitions[0].id);
+                console.log('The definition comes with process', definitions[0].getProcesses()[0].id);
+              });
               console.log('start', `${task.type} <${task.id}>`);
             }
             break;
 
           case 'bpmn:ServiceTask':
             console.log('start', task.type, task.id);
+            console.log('serviceTaskProperties', task.name);
             console.log('serviceTaskInput', task.getInput());
             console.log('serviceTaskOutput', task.getOutput());
             break;
@@ -118,6 +127,7 @@ class BPMNExecutor {
         ++stepsCounter;
       });
 
+//// LEAVE ////
       listener.on('leave', task => {
 
         switch(task.type) {
@@ -140,44 +150,70 @@ class BPMNExecutor {
 
       });
 
-      //listener.once('wait', (task) => {
-      //  console.log(`${task.type} <${task.id}>`);
-      //  engine.signal(task.id);
-      //});
-      
-      //listener.on('end', (task) => {
-          //console.log(`${task.type} <${task.id}>`);
-      //});
+//// WAIT //// compose event name with "wait" and user task id, or just "wait" to listen for all waits
+      listener.on('wait', (task) => {
+
+        const {form, formKey, id, signal, type} = task;
+
+        if (form) {
+          console.log(`activity ${type} <${id}> setting form field`);
+          form.getFields().forEach(({id, get, label}, idx) => {
+            form.setFieldValue(id, `value${idx}`);
+            console.log(`  ${label} <${id}> = ${get()}`);
+            });
+          return signal(form.getOutput())
+        } else if (formKey) {
+          console.log(`activity ${type} <${id}> expects form with key "${formKey}"`);
+          return signal({ key: formKey });
+        }
+
+        console.log(`${type} <${id}> is waiting for signal`);
+
+        switch (id) {
+          
+          case 'Task1' :
+            return signal({name: 'kebab-case-draft'});
+            break;
+          
+          case 'Task2' :
+            return signal({finalName: 'camelCase'});
+            break;
+
+          case 'ServiceTask_PingAloes' :
+            console.log('yeah');
+            return signal({output: 'kebab-case-draft'});
+            break;
+
+          default :
+            return signal();
+        
+        }
+
+      });
+
+      listener.once('wait', (activity) => {
+        console.log(`${activity.type} <${activity.id}>`);
+        engine.signal(activity.id);
+      });
 
       //listener.on('wait-userTask', (task, instance) => {
       //  console.log(`${task.type} <${task.id}> of ${instance.id} is waiting for input`);
       //  task.signal('don´t wait for me');
       //});
 
-      listener.on('wait', (task) => {
-
-        console.log(`${task.type} <${task.id}> is waiting for signal`);
-        switch (task.id) {
-          
-          case 'Task1' :
-            return task.signal({name: 'kebab-case-draft'});
-            break;
-          
-          case 'Task2' :
-            return task.signal({finalName: 'camelCase'});
-            break;
-
-          case 'ServiceTask_PingAloes' :
-            console.log('yeah');
-            return task.signal({output: 'kebab-case-draft'});
-            break;
-
-          default :
-            task.signal();
-        
-        }
-
+//// TAKEN //// NOT Working with Camunda Modeler BPMN
+      listener.on('taken', (flow) => {
+        console.log(`flow <${flow.id}> was taken`);
       });
+
+//// ERROR ////     
+      listener.on('error', (err) => {
+        console.log(`Error <${error}> occured`);
+      });
+
+      //listener.on('end', (task) => {
+          //console.log(`${task.type} <${task.id}>`);
+      //});
 
     });
   }

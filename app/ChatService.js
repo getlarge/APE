@@ -1,6 +1,6 @@
 const RocketChat = require('rocketchat-nodejs').Client;
 const EventEmitter = require('events');
-const conf = require('../config');
+const conf = require('../config/config');
 
 const Client = new RocketChat({
   host: conf.ChatService.host,

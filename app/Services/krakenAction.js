@@ -4,7 +4,7 @@ module.exports.krakenAction = (message, callback) => {
 
 	let {action, pair} = message;
     action = action || 'Time';
-    pair = pair;
+    pair = pair || ['XBTEUR'];
 
     switch(message.action) {
 
@@ -34,9 +34,14 @@ module.exports.krakenAction = (message, callback) => {
 
         case 'Ticker':
              krakenService.getTicker(pair)
-            .then((status) => {
-                console.log('Kraken - Ticker', status);
-                callback();
+            .then(result => {
+                console.log('Kraken - Ticker', result);
+                callback(null, {
+                    status: result.status,
+                    body: result,
+                });
+
+                //callback();
             }).catch(err => callback(err));
             break;
     

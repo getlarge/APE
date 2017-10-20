@@ -2,40 +2,52 @@
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
   <bpmn:process id="Process_1" isExecutable="true">
     <bpmn:startEvent id="start">
-      <bpmn:outgoing>SequenceFlow_14lpour</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_18whhry</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:serviceTask id="Task_0ycjdbk" name="Notif Aloes" camunda:expression="${services.chatAction}">
+    <bpmn:serviceTask id="ServiceTask_PingAloes" name="ping aloes" camunda:expression="${services.aloesAction}" camunda:resultVariable="output">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="body">
-            <camunda:script scriptFormat="javascript">services.aloesAction.action</camunda:script>
-          </camunda:inputParameter>
+          <camunda:inputParameter name="action">getDevices</camunda:inputParameter>
+          <camunda:outputParameter name="output">
+            <camunda:script scriptFormat="javascript">this.action</camunda:script>
+          </camunda:outputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_0v9nop5</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_18whhry</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0pcun8k</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="ServiceTask_NotifAloes" name="Notif Aloes" camunda:expression="${services.chatAction}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="body">${variables.taskInput.read[1]}</camunda:inputParameter>
+          <camunda:inputParameter name="action">Send</camunda:inputParameter>
+          <camunda:inputParameter name="roomId" />
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0h0srwa</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0e6cac4</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:endEvent id="end">
       <bpmn:incoming>SequenceFlow_0e6cac4</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_14lpour" sourceRef="start" targetRef="Task_0sa83lj" />
-    <bpmn:sequenceFlow id="SequenceFlow_0e6cac4" sourceRef="Task_0ycjdbk" targetRef="end" />
-    <bpmn:sequenceFlow id="SequenceFlow_0v9nop5" sourceRef="Task_0sa83lj" targetRef="Task_0ycjdbk" />
-    <bpmn:serviceTask id="Task_0sa83lj" name="Kraken Ticker" camunda:expression="${services.krakenAction}">
+    <bpmn:sequenceFlow id="SequenceFlow_0e6cac4" sourceRef="ServiceTask_NotifAloes" targetRef="end" />
+    <bpmn:sequenceFlow id="SequenceFlow_18whhry" sourceRef="start" targetRef="ServiceTask_PingAloes" />
+    <bpmn:serviceTask id="parser" name="parse aloes" camunda:expression="${services.parse}" camunda:resultVariable="output">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="action">Balance</camunda:inputParameter>
-          <camunda:inputParameter name="pair">
-            <camunda:list>
-              <camunda:value>XBTEUR</camunda:value>
-              <camunda:value>ETHEUR</camunda:value>
-            </camunda:list>
-          </camunda:inputParameter>
+          <camunda:inputParameter name="type">json</camunda:inputParameter>
+          <camunda:inputParameter name="search">name</camunda:inputParameter>
+          <camunda:inputParameter name="body">${variables.taskInput.ping[1]}</camunda:inputParameter>
+          <camunda:outputParameter name="output">
+            <camunda:script scriptFormat="javascript">this.action</camunda:script>
+          </camunda:outputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_14lpour</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0v9nop5</bpmn:outgoing>
+      <bpmn:incoming>SequenceFlow_0pcun8k</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0h0srwa</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0pcun8k" sourceRef="ServiceTask_PingAloes" targetRef="parser" />
+    <bpmn:sequenceFlow id="SequenceFlow_0h0srwa" sourceRef="parser" targetRef="ServiceTask_NotifAloes" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
@@ -45,8 +57,11 @@
           <dc:Bounds x="146" y="254" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_1f0pofs_di" bpmnElement="Task_0ycjdbk">
-        <dc:Bounds x="519" y="196" width="100" height="80" />
+      <bpmndi:BPMNShape id="ServiceTask_1pk81j3_di" bpmnElement="ServiceTask_PingAloes">
+        <dc:Bounds x="216" y="-2" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1f0pofs_di" bpmnElement="ServiceTask_NotifAloes">
+        <dc:Bounds x="549" y="196" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_0ljv67o_di" bpmnElement="end" bioc:stroke="#000" bioc:fill="#fff">
         <dc:Bounds x="684" y="218" width="36" height="36" />
@@ -54,30 +69,40 @@
           <dc:Bounds x="657" y="258" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_14lpour_di" bpmnElement="SequenceFlow_14lpour">
-        <di:waypoint xsi:type="dc:Point" x="209" y="236" />
-        <di:waypoint xsi:type="dc:Point" x="290" y="236" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="204.5" y="215" width="90" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0e6cac4_di" bpmnElement="SequenceFlow_0e6cac4">
-        <di:waypoint xsi:type="dc:Point" x="619" y="236" />
+      <bpmndi:BPMNEdge id="SequenceFlow_0e6cac4_di" bpmnElement="SequenceFlow_0e6cac4" bioc:stroke="#000" bioc:fill="#fff">
+        <di:waypoint xsi:type="dc:Point" x="649" y="236" />
         <di:waypoint xsi:type="dc:Point" x="684" y="236" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="606.5" y="215" width="90" height="12" />
+          <dc:Bounds x="621.5" y="215" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0v9nop5_di" bpmnElement="SequenceFlow_0v9nop5">
-        <di:waypoint xsi:type="dc:Point" x="390" y="236" />
-        <di:waypoint xsi:type="dc:Point" x="519" y="236" />
+      <bpmndi:BPMNEdge id="SequenceFlow_18whhry_di" bpmnElement="SequenceFlow_18whhry" bioc:stroke="#000" bioc:fill="#fff">
+        <di:waypoint xsi:type="dc:Point" x="209" y="236" />
+        <di:waypoint xsi:type="dc:Point" x="266" y="236" />
+        <di:waypoint xsi:type="dc:Point" x="266" y="78" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="454.5" y="215" width="0" height="12" />
+          <dc:Bounds x="237.5" y="215" width="0" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_1ese946_di" bpmnElement="Task_0sa83lj">
-        <dc:Bounds x="290" y="196" width="100" height="80" />
+      <bpmndi:BPMNShape id="ServiceTask_0wgkl11_di" bpmnElement="parser">
+        <dc:Bounds x="370" y="-2" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0pcun8k_di" bpmnElement="SequenceFlow_0pcun8k">
+        <di:waypoint xsi:type="dc:Point" x="316" y="38" />
+        <di:waypoint xsi:type="dc:Point" x="370" y="38" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="343" y="17" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0h0srwa_di" bpmnElement="SequenceFlow_0h0srwa">
+        <di:waypoint xsi:type="dc:Point" x="470" y="38" />
+        <di:waypoint xsi:type="dc:Point" x="510" y="38" />
+        <di:waypoint xsi:type="dc:Point" x="510" y="236" />
+        <di:waypoint xsi:type="dc:Point" x="549" y="236" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="525" y="131" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

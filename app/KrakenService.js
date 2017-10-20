@@ -1,7 +1,7 @@
 const Kraken = require('kraken-exchange');
 //const kraken = require('kraken-exchange-api');
 const EventEmitter = require('events');
-const conf = require('../config');
+const conf = require('../config/config');
 
 class KrakenService extends EventEmitter {
   	constructor() {
@@ -10,7 +10,7 @@ class KrakenService extends EventEmitter {
       this.emit('connected');
     }
 
-
+/// comment récupérer les variables de resolve ?
 	getTime() {
     	return new Promise((resolve, reject) => {
     		this.client.time()
@@ -19,7 +19,7 @@ class KrakenService extends EventEmitter {
             		status: result.status,
             		time: result,
           		})
-          		console.log('Kraken -', response);
+          		//console.log('Kraken -', response);
       		}).catch((e) => {
         		reject(e);
       		});
@@ -28,13 +28,13 @@ class KrakenService extends EventEmitter {
 
     getBalance() {
     	return new Promise((resolve, reject) => {
-    		this.client.balnce()
+    		this.client.balance()
         	.then(result => {
         		resolve({
             		status: result.status,
             		balance: result,
           		})
-              console.log('Kraken -', response);
+              //console.log('Kraken -', response);
       		}).catch((e) => {
         		reject(e);
       		});
@@ -49,7 +49,7 @@ class KrakenService extends EventEmitter {
             		status: result.status,
             		assets: result,
           		})
-              console.log('Kraken -', response);
+              //console.log('Kraken -', response);
       		}).catch((e) => {
         		reject(e);
       		});
@@ -64,7 +64,7 @@ class KrakenService extends EventEmitter {
             		status: result.status,
             		ticker: result,
           		})
-              console.log('Kraken -', response);
+              //console.log('Kraken -', result);
       		}).catch((e) => {
         		reject(e);
       		});

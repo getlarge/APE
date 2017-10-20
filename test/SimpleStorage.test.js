@@ -1,4 +1,4 @@
-const SimpleStorage = require('./SimpleStorage');
+const SimpleStorage = require('../app/SimpleStorage');
 
 const testKey = 'test';
 const testData = {hello: 'world!'};

@@ -8,10 +8,17 @@ module.exports.aloesAction = (message, callback) => {
 
 	switch(message.action) {
 
+        case 'read':
+            AloesService.read({'action': action}, () => {
+                callback();
+            });
+            break;
+
+
 		case 'getDevices':
             AloesService.send({'action': action}, () => {
-    			callback();
-    		});
+                callback();
+            });
             break;
 
         case 'getSensors':
@@ -19,14 +26,6 @@ module.exports.aloesAction = (message, callback) => {
     			//console.log('message:', message);
     			callback();
     		});
-            break;
-
-        case 'getScenarios':
-            AloesService.Send('action :', action)
-            .then((status) => {
-              console.log('Aloes - Message sent :', action, 'Status :', status);
-              callback();
-            }).catch(err => callback(err));
             break;
 
         default:
