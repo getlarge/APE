@@ -1,5 +1,6 @@
 # Aloes Process Engine
 
+
 ## Infos
 
 - Create or edit BPMN diagrams with Camunda modeler or bpmn.io
@@ -24,9 +25,9 @@ git clone git@framagit.org:getlarge/ape.git
 npm install
 mkdir data
 ```
-- Edit `config.sample.js` to add your custom config, then change name to `config.js`
+- Edit `config.sample.js` to add your custom config, then save under `config.js`
 
--Edit `index.js` to chose which process to execute, then :
+- Edit `index.js` to chose which process to execute, then :
 ```
 npm start
 ```

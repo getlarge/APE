@@ -74,7 +74,8 @@ function checkListeners(child, names, scope) {
 function getContext(processXml, optionsOrCallback, cb) {
   const [options, callback] = getOptionsAndCallback(optionsOrCallback, cb);
 
-  const Context = require('../../lib/Context');
+  const Context = require('bpmn-engine').Context;
+  //const Context = require('../../lib/Context');
   transformer.transform(processXml, options, (err, definitions, moddleContext) => {
     if (err) return callback(err);
     const ctxh = contextHelper(moddleContext);

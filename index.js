@@ -10,7 +10,10 @@ let servicesConnected = 0;
 
 aloesService.on('connected', () => {
 	servicesConnected++;
-	init(servicesConnected);
+
+	setTimeout(function(){
+		init(servicesConnected);
+	}, 1000);
 });
 
 chatService.on('connected', () => {
@@ -26,7 +29,7 @@ krakenService.on('connected', () => {
 let init = (servicesConnected) => {
 	if(servicesConnected > 1) {
 		const executor = new BPMNExecutor(queue, storage);
-		const proccess1 = executor.runProccess(fs.readFileSync(__dirname + '/resources/diagram_3.bpmn').toString(), {}, 'process1');
+		const proccess1 = executor.runProccess(fs.readFileSync(__dirname + '/resources/diagram_5.bpmn').toString(), {}, 'process1');
 		//const proccess2 = executor.runProccess(fs.readFileSync(__dirname + '/resources/variables-output.bpmn').toString(), {}, 'process2');
 	}
 };

@@ -54,8 +54,6 @@ class BPMNExecutor {
         // Has saved state -- resume execution
         const state = this.storage.get(`state_${scriptID}`);
         // @TODO hydrate state by camundaState and xml
-
-
         engine = Bpmn.Engine.resume(state, this.getOptions(payload, listener));
       } else {
         engine = new Bpmn.Engine({
@@ -65,12 +63,12 @@ class BPMNExecutor {
             camunda: require('camunda-bpmn-moddle/resources/camunda'),
           },
         });
-        engine.execute(this.getOptions(payload, listener));
+       engine.execute(this.getOptions(payload, listener));
       }
 
       engine.once('end', (def) => {
-        console.log('End of step', def.getOutput());
-        resolve()
+        console.log('End of step'); //, def.variables.taskInput.ping.output);
+        resolve();
       });
 
       engine.on('error', (e, source) => {
@@ -82,40 +80,38 @@ class BPMNExecutor {
 
 //// START ////      
       listener.on('start', task => {
-                      
+        
+        if (stepsCounter == 0) {
+          console.log('<!-- START APE -->');
+          engine.getDefinitions((err, definitions) => {
+          if (err) throw err;
+            console.log('Loaded', definitions[0].id);
+            console.log('The definition comes with process', definitions[0].getProcesses()[0].id);
+          });
+        } 
+        ++stepsCounter;
+        console.log('Start', `${task.type} <${task.id}>`, '| Step Limit :', steps);
+        
         switch(task.type) {
 
           case 'bpmn:Process':
-            if (stepsCounter == 0) {
-              console.log('<!-- START APE -->');
-              engine.getDefinitions((err, definitions) => {
-              if (err) throw err;
-                console.log('Loaded', definitions[0].id);
-                console.log('The definition comes with process', definitions[0].getProcesses()[0].id);
-              });
-              console.log('start', `${task.type} <${task.id}>`);
-            }
+            
             break;
 
           case 'bpmn:ServiceTask':
-            console.log('start', task.type, task.id);
-            console.log('serviceTaskProperties', task.name);
             console.log('serviceTaskInput', task.getInput());
-            console.log('serviceTaskOutput', task.getOutput());
+
             break;
 
           case 'bpmn:StartEvent':
-            console.log('start', `${task.type} <${task.id}>`);
+            console.log('startEvent');
             break;
           
           case 'bpmn:UserTask':
-            console.log('start', `${task.type} <${task.id}>`);
             console.log('userTaskInput', task.getInput());
-            console.log('userTaskOutput', task.getOutput());
             break;
           
           default :
-            console.log('Start', `${task.type} <${task.id}>`, task.variables, '| Step Limit :', steps);
         }
 
         if (!steps) {
@@ -124,7 +120,6 @@ class BPMNExecutor {
         }
         
         --steps; 
-        ++stepsCounter;
       });
 
 //// LEAVE ////
@@ -133,21 +128,40 @@ class BPMNExecutor {
         switch(task.type) {
 
           case 'bpmn:EndEvent':
-            resolve({
-              type: 'end',
-              result: 'toto' // message = object of «input parameter : value» pairs
-            })
             console.log('<!-- END APE -->');
+            engine.getDefinitions((err, definitions) => {
+            if (err) throw err;
+              console.log('Loaded', definitions[0].id);
+             // console.log('The definition comes with process', definitions[0].getProcesses()[0].id, definitions[0].getProcesses()[0].context.variables);
+            });
             this.saveState(engine, scriptID);
             engine.stop();
             process.exit(1);            
             break;
           
           default :
-            console.log('leave', `${task.type} <${task.id}>`, steps, stepsCounter);
-            //console.log('leave', task.id)
+           //console.log('leave', task.id);
         }
 
+      });
+
+//// END ////
+      listener.on('end', (task) => {
+
+        console.log('end', `${task.type} <${task.id}>`, steps, stepsCounter);
+        switch(task.type) {
+          
+          case 'bpmn:ServiceTask':
+            console.log('serviceTaskProperties', task.name);
+            console.log('serviceTaskOutput', task.getOutput());
+            break;
+          
+          case 'bpmn:UserTask':
+            console.log('userTaskOutput', task.getOutput());
+            break;
+            
+          default :
+        }
       });
 
 //// WAIT //// compose event name with "wait" and user task id, or just "wait" to listen for all waits
@@ -201,7 +215,7 @@ class BPMNExecutor {
       //  task.signal('don´t wait for me');
       //});
 
-//// TAKEN //// NOT Working with Camunda Modeler BPMN
+//// TAKEN //// NOT Working with bpmn-engine#dev
       listener.on('taken', (flow) => {
         console.log(`flow <${flow.id}> was taken`);
       });
@@ -211,9 +225,6 @@ class BPMNExecutor {
         console.log(`Error <${error}> occured`);
       });
 
-      //listener.on('end', (task) => {
-          //console.log(`${task.type} <${task.id}>`);
-      //});
 
     });
   }

@@ -3,24 +3,20 @@ module.exports = {
     module: __dirname + '/aloesAction.js',
     fnName: 'aloesAction',
   },
-  aloesService: {
-    module: __dirname + '/aloesService.js',
-    fnName: 'aloesService',
-  },
   chatAction: {
     module: __dirname + '/chatAction.js',
     fnName: 'chatAction',
   },
-  chatService: {
-    module: __dirname + '/chatService.js',
-    fnName: 'chatService',
+  confService: {
+    module: __dirname + '/confService.js',
+    fnName: 'confService',
   },
   dynamicService: {
     module: __dirname + '/dynamicService.js',
     fnName: 'dynamicService',
   },
   krakenAction: {
-   module: __dirname + '/krakenAction.js',
+    module: __dirname + '/krakenAction.js',
     fnName: 'krakenAction',
   },
   log: {

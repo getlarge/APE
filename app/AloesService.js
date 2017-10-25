@@ -2,14 +2,8 @@ const AloesApiClient = require('AloesApiClient');
 const EventEmitter = require('events');
 const conf = require('../config/config');
 
-function isJson(str) {
-    try { JSON.parse(str) }
-    catch (e) { return false }
-    return true;
-}
-
-
 class AloesService extends EventEmitter {
+
     constructor() {
         super();
         this.client = new AloesApiClient({
@@ -21,57 +15,39 @@ class AloesService extends EventEmitter {
             debug: true
         });
 
-        this.client.connect( () => {
+        this.client.connect();
+
+        this.client.on('connected', () => {
 
             this.emit('connected');
+        });
 
-            this.client.onmessage = message => {
-                if (isJson(message)) {
+        this.client.on('message', message => {
 
-                    message = JSON.parse(message);
+            switch (message.content) {
 
-                    switch (message.content) {
+                case 'deviceState':
+                    console.log('deviceState')
+                    break;
 
-                        case 'pong':
-                            console.log('Aloes - pong');
-                            break;
+                case 'user':
+                    console.log('user')
+                    break;
 
-                        case 'devicesList': // a modifier pour sélectionner les messages contenants le "case"...
-                            console.log('Aloes - Devices list:', message);
-                            break;
+                case 'points':
+                    console.log('points')
+                    break;
 
-                        case 'sensorsList':
-                            console.log('Aloes - Sensors list:', message);
-                            break;
-
-                        case 'userInfo':
-                            console.log('Aloes - User info:', message);
-                            break;
-
-                        default:
-                            console.log('Aloes - unknown message :', message);
-                    };
-                }
+                default:
+                    // console.log('unknown message :', message);
             };
         });
     }   
 
+    send(message, callback) {
 
-        send(message, callback) { // enrichir la callback pour récuper le message.content dans une variable body
-
-            this.client.send(message, err => {
-
-                if (err) {
-
-                    console.log('send error:', err);
-
-                }
-            
-                callback();
-            });
-
-        }
-
+        this.client.send(message, callback);
+    }
 }
 
 

@@ -8,30 +8,15 @@ module.exports.aloesAction = (message, callback) => {
 
 	switch(message.action) {
 
-        case 'read':
-            AloesService.read({'action': action}, () => {
-                callback();
-            });
-            break;
-
-
-		case 'getDevices':
-            AloesService.send({'action': action}, () => {
-                callback();
-            });
-            break;
-
-        case 'getSensors':
-            AloesService.send({'action': action, 'deviceId': deviceId}, () => {
-    			//console.log('message:', message);
-    			callback();
-    		});
-            break;
-
         default:
-			AloesService.send({'action': action}, () => {
-    			callback();
-    		});
+            AloesService.send({'action': message.action}, (err, response) => {
+                console.log(response);
+                const result = response;
+                callback(null, {
+                    status: 200,
+                    result: response
+                });
+            });
     }
 
 
