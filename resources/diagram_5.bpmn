@@ -8,7 +8,7 @@
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="action">ping</camunda:inputParameter>
-          <camunda:outputParameter name="output">${result[0]}</camunda:outputParameter>
+          <camunda:outputParameter name="output">${result}</camunda:outputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1orxngf</bpmn:incoming>

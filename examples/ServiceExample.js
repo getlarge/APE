@@ -1,34 +1,46 @@
-'use strict';
-
 const Bpmn = require('bpmn-engine');
 
 const processXml = `
-<?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn">
-  <process id="theProcess" isExecutable="true">
-    <serviceTask id="serviceTask1" name="Get" camunda:expression="\${services.get}" />
-    <serviceTask id="serviceTask2" name="Get with var" camunda:expression="\${services.getService(variables.choice)}" />
-    <serviceTask id="serviceTask3" name="Call api" camunda:expression="\${services.getWithIO}">
-      <extensionElements>
-        <camunda:inputOutput>
-          <camunda:inputParameter name="uri">\${variables.api}/v1/data</camunda:inputParameter>
-          <camunda:inputParameter name="json">\${true}</camunda:inputParameter>
-          <camunda:inputParameter name="headers">
-            <camunda:map>
-              <camunda:entry key="User-Agent">curl</camunda:entry>
-              <camunda:entry key="Accept">application/json</camunda:entry>
-            </camunda:map>
-          </camunda:inputParameter>
-          <camunda:outputParameter name="statusCode">\${result[0].statusCode}</camunda:outputParameter>
-          <camunda:outputParameter name="body">\${result[1]}</camunda:outputParameter>
-        </camunda:inputOutput>
-      </extensionElements>
-    </serviceTask>
-  </process>
-</definitions>`;
+  <?xml version="1.0" encoding="UTF-8"?>
+  <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <process id="Process_1" isExecutable="true">
+      <startEvent id="start">
+        <outgoing>flow1</outgoing>
+      </startEvent>
+      <sequenceFlow id="flow1" sourceRef="start" targetRef="serviceTask" />
+      <endEvent id="end">
+        <incoming>flow2</incoming>
+      </endEvent>
+      <sequenceFlow id="flow2" sourceRef="serviceTask" targetRef="end" />
+      <serviceTask id="serviceTask" name="Get">
+        <extensionElements>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="uri">
+              <camunda:script scriptFormat="JavaScript">variables.apiPath</camunda:script>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="result">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[
+'use strict';
+var result = {
+  statusCode: result[0].statusCode,
+  body: result[0].statusCode === 200 ? JSON.parse(result[1]) : undefined
+};
+result;
+              ]]>
+              </camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:properties>
+            <camunda:property name="service" value="getRequest" />
+          </camunda:properties>
+        </extensionElements>
+        <incoming>flow1</incoming>
+        <outgoing>flow2</outgoing>
+      </serviceTask>
+    </process>
+  `;
 
 const engine = new Bpmn.Engine({
-  name: 'service expression example',
   source: processXml,
   moddleOptions: {
     camunda: require('camunda-bpmn-moddle/resources/camunda')
@@ -36,29 +48,19 @@ const engine = new Bpmn.Engine({
 });
 
 engine.execute({
-  services: {
-    get: (context, next) => {
-      console.log('RUN GET');
-      next();
-    },
-    getService: (choice) => {
-      console.log('RETURN', choice);
-      return function(context, next) {
-        console.log('RUN', choice);
-      }
-    },
-    getWithIO: (reqOptions, next) => {
-      console.log('RUN IO GET', reqOptions.uri, 'with headers', reqOptions.headers);
-      next(null, {statusCode:200}, {});
-    }
-
-  },
   variables: {
-    choice: 'Ehm...',
-    api: 'http://example.com'
+    apiPath: 'http://example.com/test'
+  },
+  services: {
+    getRequest: {
+      module: 'request',
+      fnName: 'get'
+    }
   }
-});
-
-engine.once('end', () => {
-  console.log('Completed!', execution.variables.taskInput.serviceTask1);
+}, (err, execution) => {
+  if (err) throw err;
+  execution.once('end', () => {
+    console.log(execution.variables)
+    console.log('Script task output:', execution.variables.result);
+  });
 });

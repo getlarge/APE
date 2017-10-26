@@ -82,6 +82,10 @@ class BPMNExecutor {
       listener.on('start', task => {
         
         if (stepsCounter == 0) {
+          function test() {
+            new Context('theProcess', moddleContext); // eslint-disable-line no-new
+            console.log('theProcess', moddleContext);
+         }
           console.log('<!-- START APE -->');
           engine.getDefinitions((err, definitions) => {
           if (err) throw err;
@@ -129,16 +133,18 @@ class BPMNExecutor {
 
           case 'bpmn:EndEvent':
             console.log('<!-- END APE -->');
-            engine.getDefinitions((err, definitions) => {
-            if (err) throw err;
-              console.log('Loaded', definitions[0].id);
-             // console.log('The definition comes with process', definitions[0].getProcesses()[0].id, definitions[0].getProcesses()[0].context.variables);
-            });
             this.saveState(engine, scriptID);
             engine.stop();
             process.exit(1);            
             break;
-          
+          case 'bpmn:EndEvent':
+            engine.getDefinitions((err, definitions) => {
+              if (err) throw err;
+                console.log('Loaded', definitions[0].id);
+                //console.log('The definition comes with process', definitions[0].getProcesses()[0].id, definitions[0].getProcesses()[0].context.variables);
+              });
+            break;
+
           default :
            //console.log('leave', task.id);
         }

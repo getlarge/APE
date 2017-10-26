@@ -20,7 +20,7 @@
   "dependencies": {
     "AloesApiClient": "git+https://framagit.org/eclem/AloesApiClient.git",
     "async": "^2.5.0",
-    "bpmn-engine": "git://github.com/paed01/bpmn-engine.git#develop",
+    "bpmn-engine": "git+https://github.com/paed01/bpmn-engine.git#develop",
     "bpmn-moddle": "^0.14.0",
     "camunda-bpmn-moddle": "^0.13.0",
     "kraken-exchange-api": "^1.0.0",
