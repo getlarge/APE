@@ -9,11 +9,18 @@ const aloesClient = require('./AloesClient');
 //const chatClient = require('./ChatClient');
 //const krakenClient = require('./KrakenClient');
 const mqttClient = require('./MQTTClient');
+var MQTTPattern = require("mqtt-pattern");
 
 let stepsCounter = 0;
 let clientsConnected = 0;
+let servicesCounter = 2;
+let id;
+let type;
+let event;
+let filled;
 
-//const source = fs.readFileSync('../resources/diagram_5.bpmn');
+//const source = fs.readFileSync('../resources/diagram_1.bpmn');
+
 
 aloesClient.on('connected', () => {
   clientsConnected++;
@@ -35,7 +42,9 @@ aloesClient.on('connected', () => {
 
 mqttClient.on('connected', () => {
   clientsConnected++;
+  setTimeout(function(){
     init(clientsConnected);
+  }, 1000);
 });
 
 const engine = new Bpmn.Engine({
@@ -47,41 +56,46 @@ const engine = new Bpmn.Engine({
   }
 });
 
+let mqttPattern = function(pattern, task) {
+    var params = {
+      type: task.type,
+    }
+    //var filled = MQTTPattern.fill(pattern, params);
+    //console.log(`Message filtré : [ ` + filled + " ]");
+    return filled = MQTTPattern.fill(pattern, params);
+}
+
 const listener = new EventEmitter();
 //// EVENT LISTENERS /////
 
 //// START ////      
       listener.on('start', task => {
-        
+
+        mqttPattern("APE/activity/+type/start", task);
+
         if (stepsCounter == 0) {
           console.log('<!-- START APE -->');
+          mqttClient.publish(filled, "<!-- START APE -->");
           engine.getDefinitions((err, definitions) => {
           if (err) throw err;
             console.log('Loaded', definitions[0].id);
             console.log('The definition comes with process', definitions[0].getProcesses()[0].id);
+            //console.log('The definition comes with process', definitions[0].getProcesses()[0].id, definitions[0].getProcesses()[0].context.variables);
           });
         } 
         
         ++stepsCounter;
         console.log('STEP # :', stepsCounter, '| START', `${task.type} <${task.id}>`);
-        
+        //console.log('STEP # :', stepsCounter, '| START', task);
+
+        mqttClient.publish(filled, JSON.stringify({id: task.id, name: task.name, input: task.getInput()}));
+        //mqttClient.publish(filled, task.io.variables);
+        console.log('task :', task.parentContext);
+
         switch(task.type) {
 
           case 'bpmn:Process':
             
-            break;
-
-          case 'bpmn:ServiceTask':
-            console.log('serviceTaskName', task.name, ' | serviceTaskInput', task.getInput());
-
-            break;
-
-          case 'bpmn:StartEvent':
-            console.log('startEvent');
-            break;
-          
-          case 'bpmn:UserTask':
-            console.log('userTaskName', task.name, ' | userTaskInput', task.getInput());
             break;
           
           default :
@@ -94,6 +108,9 @@ const listener = new EventEmitter();
 //// LEAVE ////
       listener.on('leave', task => {
 
+        //mqttPattern("APE/activity/+type/leave", task);
+        //mqttClient.publish(filled, JSON.stringify({id: task.id, name: task.name, input: task.getOutput()}));
+
         switch(task.type) {
 
           case 'bpmn:EndEvent':
@@ -101,13 +118,6 @@ const listener = new EventEmitter();
             //this.saveState(engine, scriptID);
             engine.stop();
             process.exit(1);            
-            break;
-          case 'bpmn:EndEvent':
-            engine.getDefinitions((err, definitions) => {
-              if (err) throw err;
-                console.log('Loaded', definitions[0].id);
-                //console.log('The definition comes with process', definitions[0].getProcesses()[0].id, definitions[0].getProcesses()[0].context.variables);
-              });
             break;
 
           default :
@@ -120,7 +130,10 @@ const listener = new EventEmitter();
 //// END ////
       listener.on('end', (task) => {
 
-        console.log('END', `${task.type} <${task.id}>`);
+        mqttPattern("APE/activity/+type/end", task);
+        mqttClient.publish(filled, JSON.stringify({id: task.id, name: task.name, output: task.getOutput()}));
+
+        //console.log('END', `${task.type} <${task.id}>`);
         switch(task.type) {
           
           case 'bpmn:ServiceTask':
@@ -198,7 +211,7 @@ const listener = new EventEmitter();
 
 
 let init = (clientsConnected) => {
-  if(clientsConnected >= 1) {
+  if(clientsConnected >= servicesCounter) {
     setTimeout(function(){
       engine.execute({
         services : services,

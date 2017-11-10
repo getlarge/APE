@@ -1,30 +1,27 @@
 //var AsyncClient = require("async-mqtt").AsyncClient;
  
-var mqttClient = require('../app/MQTTClient');
- 
-//var asyncClient = new AsyncClient(client);
- 
+var MQTTClient = require('../app/MQTTClient');
+
 module.exports.mqttAction = (message, callback) => {
 
-	let {action, topic, payload} = message;
-  	action = action || 'Subscribe';
-  	topic = topic || 'logs';
-  	payload = payload || 'APE_test';
+  //var asyncClient = new AsyncClient(MQTTClient);
 
-	switch(message.action) {
+  let {action, topic, payload} = message;
+    action = action || 'Subscribe';
+    topic = topic || 'logs';
+    payload = payload || 'APE_test';
 
-		case 'Publish' :
-			mqttClient.publish(topic, payload)
-            .then((status) => {
-    		  console.log("Message", payload, "sent to ", topic, "Status : ", status);
-              callback();
-            }).catch(err => callback(err));
-    		callback();
-			break;
+  switch(message.action) {
 
 
+     case 'Test' :
 
-        default:
+    default:
+      MQTTClient.publish(topic, payload, (err, response) => {
+                console.log(response);
+                //const result = response;
+                callback();
+            });
  
     }
 

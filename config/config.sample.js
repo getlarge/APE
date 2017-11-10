@@ -33,9 +33,11 @@ var config = {
         url: '',
         host: '',
         port: 1883,
+        clientId: '',
         username: '',
-        password: ''
-
+        password: '',
+        outTopic: '',
+        inTopic: ''
     },
 
 };
