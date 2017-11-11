@@ -1,4 +1,4 @@
-- use Nodejs >= v8.2.1
+- use Nodejs >= v6.0.0
 
 - git clone git@framagit.org:getlarge/ape.git
 
@@ -6,8 +6,8 @@
 
 - npm install
 
-- mkdir data 
+- choose which diagram to execute in app/index.js
 
-- rm data/*  ( to start fresh processes )
+- init process with npm start
 
-- use dev branch to commit changes
+- use a new dev branch to commit changes
