@@ -17,7 +17,7 @@
       <bpmn:outgoing>SequenceFlow_0keajbd</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1e6vzx0" sourceRef="Start" targetRef="fetch" />
-    <bpmn:exclusiveGateway id="ExclusiveGateway_18cywiu">
+    <bpmn:exclusiveGateway id="ExclusiveGateway_18cywiu" camunda:asyncBefore="true">
       <bpmn:incoming>SequenceFlow_0keajbd</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1bpjuut</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0qqaifb</bpmn:outgoing>
@@ -40,19 +40,6 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0qhxetn" sourceRef="Task_191bfws" targetRef="ExclusiveGateway_0c57ix8" />
     <bpmn:sequenceFlow id="SequenceFlow_0keajbd" sourceRef="fetch" targetRef="ExclusiveGateway_18cywiu" />
-    <bpmn:serviceTask id="logWeather" name="Show weather" camunda:expression="${services.log}">
-      <bpmn:extensionElements>
-        <camunda:inputOutput>
-          <camunda:inputParameter name="input">
-            <camunda:script scriptFormat="JavaScript">variables.taskInput.parser[0]</camunda:script>
-          </camunda:inputParameter>
-          <camunda:inputParameter name="title">Current weather in Kazan:</camunda:inputParameter>
-        </camunda:inputOutput>
-      </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_0fpi01e</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1lrmfr8</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_0fpi01e" sourceRef="parser" targetRef="logWeather" />
     <bpmn:serviceTask id="parser" name="Parse body" camunda:expression="${services.parse}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
@@ -63,6 +50,17 @@
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1bpjuut</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0fpi01e</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0fpi01e" sourceRef="parser" targetRef="logWeather" />
+    <bpmn:serviceTask id="logWeather" name="Show weather" camunda:expression="${services.log}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="input">${variables.taskInput.parser[0]}</camunda:inputParameter>
+          <camunda:inputParameter name="title">Current weather in Kazan:</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0fpi01e</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1lrmfr8</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:parallelGateway id="parallel1">
       <bpmn:incoming>SequenceFlow_12879j6</bpmn:incoming>
