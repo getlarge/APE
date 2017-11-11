@@ -54,7 +54,7 @@ class MQTTClient extends EventEmitter {
       });
       client.on('message', (topic, message) => {
 
-          const obj = JSON.parse(message.toString()); 
+          const obj = message.toString(); 
           console.log(obj);
 
           switch (message.content) {

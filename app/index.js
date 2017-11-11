@@ -90,7 +90,7 @@ const listener = new EventEmitter();
 
         mqttClient.publish(filled, JSON.stringify({id: task.id, name: task.name, input: task.getInput()}));
         //mqttClient.publish(filled, task.io.variables);
-        console.log('task :', task.parentContext);
+        //console.log('task :', task.parentContext);
 
         switch(task.type) {
 
@@ -230,8 +230,8 @@ let init = (clientsConnected) => {
   }
 };
 
-engine.once('end', (definition) => {
-  console.log(definition.variables);
-  console.log('Completed!');
-});
+//engine.once('end', (definition) => {
+//  console.log(definition.variables);
+//  console.log('Completed!');
+//});
 
