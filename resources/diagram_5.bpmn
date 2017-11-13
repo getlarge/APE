@@ -8,14 +8,14 @@
       <bpmn:incoming>SequenceFlow_0ddhx0t</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1xb6z6a" sourceRef="StartEvent_1dpmco6" targetRef="mqtt" />
-    <bpmn:sequenceFlow id="SequenceFlow_01ije0u" sourceRef="mqtt" targetRef="Task_0tsbekm" />
-    <bpmn:serviceTask id="mqtt" name="mqtt" camunda:expression="${services.mqttAction}" camunda:resultVariable="output">
+    <bpmn:sequenceFlow id="SequenceFlow_01ije0u" sourceRef="mqtt" targetRef="ServiceTask_1p61sga" />
+    <bpmn:serviceTask id="mqtt" name="send_mqtt" camunda:expression="${services.mqttAction}" camunda:resultVariable="output">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="action">Test</camunda:inputParameter>
-          <camunda:inputParameter name="topic">logs</camunda:inputParameter>
-          <camunda:inputParameter name="payload">youhou!</camunda:inputParameter>
-          <camunda:outputParameter name="output">${services.mqttAction.callback}</camunda:outputParameter>
+          <camunda:inputParameter name="action">Publish</camunda:inputParameter>
+          <camunda:inputParameter name="topic">APE/service/1212/output</camunda:inputParameter>
+          <camunda:inputParameter name="payload">Aloes ?</camunda:inputParameter>
+          <camunda:outputParameter name="output" />
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1xb6z6a</bpmn:incoming>
@@ -29,9 +29,32 @@
           <camunda:inputParameter name="input">${services.taskInput.mqtt.output}</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_01ije0u</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0mj4goj</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0ddhx0t</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:serviceTask id="ServiceTask_1p61sga" name="receive_mqtt" camunda:expression="${services.mqttAction}" camunda:resultVariable="output">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="action">Receive</camunda:inputParameter>
+          <camunda:inputParameter name="topic">APE/service/1212/output</camunda:inputParameter>
+          <camunda:inputParameter name="delay">2</camunda:inputParameter>
+          <camunda:outputParameter name="result">${params}</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_01ije0u</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_01rngqk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_01rngqk" sourceRef="ServiceTask_1p61sga" targetRef="Task_12nouy7" />
+    <bpmn:serviceTask id="Task_12nouy7" name="wait" camunda:expression="${services.wait}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="delay">5</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_01rngqk</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0mj4goj</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0mj4goj" sourceRef="Task_12nouy7" targetRef="Task_0tsbekm" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
@@ -42,9 +65,9 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_1lhnd0s_di" bpmnElement="EndEvent_1lhnd0s">
-        <dc:Bounds x="644" y="133" width="36" height="36" />
+        <dc:Bounds x="893" y="133" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="617" y="173" width="90" height="12" />
+          <dc:Bounds x="866" y="173" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1xb6z6a_di" bpmnElement="SequenceFlow_1xb6z6a">
@@ -56,24 +79,44 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_01ije0u_di" bpmnElement="SequenceFlow_01ije0u">
         <di:waypoint xsi:type="dc:Point" x="398" y="151" />
-        <di:waypoint xsi:type="dc:Point" x="467" y="151" />
+        <di:waypoint xsi:type="dc:Point" x="452" y="151" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="387.5" y="130" width="90" height="12" />
+          <dc:Bounds x="380" y="130" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_02eanwz_di" bpmnElement="mqtt">
         <dc:Bounds x="298" y="111" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0ddhx0t_di" bpmnElement="SequenceFlow_0ddhx0t">
-        <di:waypoint xsi:type="dc:Point" x="567" y="151" />
-        <di:waypoint xsi:type="dc:Point" x="644" y="151" />
+        <di:waypoint xsi:type="dc:Point" x="869" y="151" />
+        <di:waypoint xsi:type="dc:Point" x="893" y="151" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="605.5" y="130" width="0" height="12" />
+          <dc:Bounds x="836" y="130" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1vkgkmp_di" bpmnElement="Task_0tsbekm">
-        <dc:Bounds x="467" y="111" width="100" height="80" />
+        <dc:Bounds x="769" y="111" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1p61sga_di" bpmnElement="ServiceTask_1p61sga">
+        <dc:Bounds x="452" y="111" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_01rngqk_di" bpmnElement="SequenceFlow_01rngqk">
+        <di:waypoint xsi:type="dc:Point" x="552" y="151" />
+        <di:waypoint xsi:type="dc:Point" x="598" y="151" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="575" y="130" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_140iuie_di" bpmnElement="Task_12nouy7">
+        <dc:Bounds x="598" y="111" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0mj4goj_di" bpmnElement="SequenceFlow_0mj4goj">
+        <di:waypoint xsi:type="dc:Point" x="698" y="151" />
+        <di:waypoint xsi:type="dc:Point" x="769" y="151" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="733.5" y="130" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

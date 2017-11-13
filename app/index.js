@@ -6,14 +6,14 @@ const EventEmitter = require('events').EventEmitter;
 //const listeners = require('../Events');
 const services = require('../Services');
 const aloesClient = require('./AloesClient');
-//const chatClient = require('./ChatClient');
+const chatClient = require('./ChatClient');
 //const krakenClient = require('./KrakenClient');
 const mqttClient = require('./MQTTClient');
 var MQTTPattern = require("mqtt-pattern");
 
 let stepsCounter = 0;
 let clientsConnected = 0;
-let servicesCounter = 2;
+let servicesCounter = 3;
 let id;
 let type;
 let event;
@@ -30,10 +30,10 @@ aloesClient.on('connected', () => {
   }, 1000);
 });
 
-//chatClient.on('connected', () => {
-//  clientsConnected++;
-//  init(clientsConnected);
-//});
+chatClient.on('connected', () => {
+  clientsConnected++;
+  init(clientsConnected);
+});
 
 //krakenClient.on('connected', () => {
 //  clientsConnected++;
@@ -44,12 +44,12 @@ mqttClient.on('connected', () => {
   clientsConnected++;
   setTimeout(function(){
     init(clientsConnected);
-  }, 1000);
+  }, 500);
 });
 
 const engine = new Bpmn.Engine({
   name: 'service expression example',
-  source: fs.readFileSync('./resources/diagram_5.bpmn'),
+  source: fs.readFileSync('./resources/diagram_3.bpmn'),
 //  source: source,
   moddleOptions: {
     camunda: require('camunda-bpmn-moddle/resources/camunda')
@@ -65,15 +65,19 @@ let mqttPattern = function(pattern, task) {
     return filled = MQTTPattern.fill(pattern, params);
 }
 
+///////// EVENT LISTENERS /////
+
 const listener = new EventEmitter();
-//// EVENT LISTENERS /////
 
 //// START ////      
       listener.on('start', task => {
 
-        mqttPattern("APE/activity/+type/start", task);
+        ++stepsCounter;
+        mqttPattern("APE/activity/start/+type", task);
+        /// rajouter heures et date
+        console.log('STEP # :', stepsCounter, '| START', `${task.type} <${task.id}>`);
 
-        if (stepsCounter == 0) {
+        if (stepsCounter <= 1) {
           console.log('<!-- START APE -->');
           mqttClient.publish(filled, "<!-- START APE -->");
           engine.getDefinitions((err, definitions) => {
@@ -84,24 +88,13 @@ const listener = new EventEmitter();
           });
         } 
         
-        ++stepsCounter;
-        console.log('STEP # :', stepsCounter, '| START', `${task.type} <${task.id}>`);
-        //console.log('STEP # :', stepsCounter, '| START', task);
-
-        mqttClient.publish(filled, JSON.stringify({id: task.id, name: task.name, input: task.getInput()}));
+        else {
+          mqttClient.publish(filled, JSON.stringify({id: task.id, name: task.name, input: task.getInput()}));
         //mqttClient.publish(filled, task.io.variables);
         //console.log('task :', task.parentContext);
-
-        switch(task.type) {
-
-          case 'bpmn:Process':
-            
-            break;
-          
-          default :
-           //console.log(`${task.type} <${execution.variables.taskInput.serviceTask}>`);
-
+        //console.log('STEP # :', stepsCounter, '| START', task);
         }
+
 
       });
 
@@ -114,10 +107,9 @@ const listener = new EventEmitter();
         switch(task.type) {
 
           case 'bpmn:EndEvent':
-            console.log('<!-- END APE -->');
             //this.saveState(engine, scriptID);
-            engine.stop();
-            process.exit(1);            
+            //engine.stop();
+            //process.exit(1);            
             break;
 
           default :
@@ -130,29 +122,22 @@ const listener = new EventEmitter();
 //// END ////
       listener.on('end', (task) => {
 
-        mqttPattern("APE/activity/+type/end", task);
+        mqttPattern("APE/activity/end/+type", task);
         mqttClient.publish(filled, JSON.stringify({id: task.id, name: task.name, output: task.getOutput()}));
-
-        //console.log('END', `${task.type} <${task.id}>`);
-        switch(task.type) {
-          
-          case 'bpmn:ServiceTask':
-            console.log('serviceTaskName', task.name, ' | serviceTaskOutput', task.getOutput());
-            break;
-          
-          case 'bpmn:UserTask':
-            console.log('userTaskName', task.name, ' | userTaskOutput', task.getOutput());
-            break;
-            
-          default :
-        }
+       
       });
+
 
 //// WAIT //// compose event name with "wait" and user task id, or just "wait" to listen for all waits
       listener.on('wait', (task) => {
 
+        mqttPattern("APE/activity/wait/+type", task);
+
         const {form, formKey, id, signal, type} = task;
 
+        mqttClient.publish(filled, JSON.stringify({id: task.id, name: task.name, task: task}));
+
+        
         if (form) {
           console.log(`activity ${type} <${id}> setting form field`);
           form.getFields().forEach(({id, get, label}, idx) => {
@@ -210,21 +195,32 @@ const listener = new EventEmitter();
       });
 
 
+////// VARIABLES //////
+const variables = {
+      input: 'jobi',
+      choice: 'Ehm...',
+      api: 'http://example.com'
+};
+
+
 let init = (clientsConnected) => {
   if(clientsConnected >= servicesCounter) {
     setTimeout(function(){
       engine.execute({
         services : services,
-        variables: {
-          input: 'jobi',
-          choice: 'Ehm...',
-          api: 'http://example.com'
-        },
+        variables: variables,
         listener : listener,
-     // console.log('Completed!');
       }, (err, instance) => {
         if (err) throw err;
-        console.log('Definition started with process', instance.mainProcess.id);
+        instance.once('end', (definition) => {
+          //console.log(definition.variables);
+          mqttPattern("APE/engine/end/+type", definition);
+          mqttClient.publish(filled, JSON.stringify({id: definition.id, name: definition.name, variables: definition.variables}));
+          console.log('<!-- END APE -->');
+          engine.stop();
+          process.exit(1);        
+        });
+        //console.log('Definition started with process', instance.mainProcess.id);
       });  
     }, 2000);
   }

@@ -1,12 +1,12 @@
 module.exports = {
-  //aloesAction: {
-  // module: __dirname + '/aloesAction.js',
-  //  fnName: 'aloesAction',
-  //},
-  //chatAction: {
-  //  module: __dirname + '/chatAction.js',
-  //  fnName: 'chatAction',
-  //},
+  aloesAction: {
+   module: __dirname + '/aloesAction.js',
+    fnName: 'aloesAction',
+  },
+  chatAction: {
+    module: __dirname + '/chatAction.js',
+    fnName: 'chatAction',
+  },
   confService: {
     module: __dirname + '/confService.js',
     fnName: 'confService',

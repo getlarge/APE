@@ -30,14 +30,17 @@ var config = {
 
     MQTTClient: {
 
-        url: '',
-        host: '',
-        port: 1883,
-        clientId: '',
-        username: '',
-        password: '',
-        outTopic: '',
-        inTopic: ''
+        url: 'mqtt://',
+        options : {
+            host: '',
+            port: 1883,
+            clientId: '',
+            rejectUnauthorized: false,
+            username: '',
+            password: new Buffer('')
+        },
+        outTopic: 'APE/sender',
+        inTopic: 'APE/receiver'
     },
 
 };
