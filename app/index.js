@@ -49,7 +49,8 @@ mqttClient.on('connected', () => {
 
 const engine = new Bpmn.Engine({
   name: 'service expression example',
-  source: fs.readFileSync('./resources/diagram_3.bpmn'),
+  source: fs.readFileSync('./resources/croissance.bpmn'),
+//  source: fs.readFileSync('./resources/diagram_3.bpmn'),
 //  source: source,
   moddleOptions: {
     camunda: require('camunda-bpmn-moddle/resources/camunda')
@@ -133,22 +134,12 @@ const listener = new EventEmitter();
 
         mqttPattern("APE/activity/wait/+type", task);
 
-        const {form, formKey, id, signal, type} = task;
+        //const {form, formKey, id, signal, type} = task;
 
-        mqttClient.publish(filled, JSON.stringify({id: task.id, name: task.name, task: task}));
+        mqttClient.publish(filled, JSON.stringify({id: task.id, name: task.name}));
 
         
-        if (form) {
-          console.log(`activity ${type} <${id}> setting form field`);
-          form.getFields().forEach(({id, get, label}, idx) => {
-            form.setFieldValue(id, `value${idx}`);
-            console.log(`  ${label} <${id}> = ${get()}`);
-            });
-          return signal(form.getOutput())
-        } else if (formKey) {
-          console.log(`activity ${type} <${id}> expects form with key "${formKey}"`);
-          return signal({ key: formKey });
-        }
+
 
         console.log(`${type} <${id}> is waiting for signal`);
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
   <bpmn:collaboration id="Collaboration_1au63fr">
     <bpmn:participant id="Participant_Cutlivateur" name="Cutlivateur" processRef="Process_1" />
     <bpmn:participant id="Participant_ProcessEngine" name="Process Engine" processRef="Process_1ydmhs1" />
     <bpmn:messageFlow id="MessageFlow_0hx9wjw" sourceRef="IntermediateThrowEvent_0dgtd0p" targetRef="IntermediateThrowEvent_1muaebs" />
-    <bpmn:messageFlow id="MessageFlow_1x1iud5" sourceRef="IntermediateThrowEvent_01883sq" targetRef="StartEvent_LancementDuAPE" />
+    <bpmn:messageFlow id="MessageFlow_1x1iud5" sourceRef="MessageEndEvent_01883sq" targetRef="StartEvent_LancementDuAPE" />
     <bpmn:messageFlow id="MessageFlow_13ks0ui" sourceRef="EndEvent_1uvq61h" targetRef="StartEvent_1leppys" />
     <bpmn:messageFlow id="MessageFlow_0abzs45" sourceRef="IntermediateThrowEvent_0p4tgm2" targetRef="IntermediateThrowEvent_0i7fzvt" />
     <bpmn:textAnnotation id="TextAnnotation_1dgmnvj">    <bpmn:text><![CDATA[- programmation horaire
@@ -17,7 +17,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1v8t517" sourceRef="StartEvent_BouturesPretesAEtreTransplantees" targetRef="ManualTask_Transplantation" />
     <bpmn:sequenceFlow id="SequenceFlow_04yz01i" sourceRef="IntermediateThrowEvent_1muaebs" targetRef="ManualTask_CorrectionManuelle" />
     <bpmn:sequenceFlow id="SequenceFlow_16mtvzj" sourceRef="ManualTask_ControlerPassageFloraison" targetRef="ExclusiveGateway_Pret" />
-    <bpmn:sequenceFlow id="SequenceFlow_1dh2964" sourceRef="ManualTask_LancementDuSystemeEnvoiDunSignal" targetRef="IntermediateThrowEvent_01883sq" />
+    <bpmn:sequenceFlow id="SequenceFlow_1dh2964" sourceRef="ManualTask_LancementDuSystemeEnvoiDunSignal" targetRef="MessageEndEvent_01883sq" />
     <bpmn:manualTask id="ManualTask_CorrectionManuelle" name="Correction manuelle">
       <bpmn:incoming>SequenceFlow_04yz01i</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1t5yynt</bpmn:outgoing>
@@ -27,12 +27,14 @@
       <bpmn:messageEventDefinition />
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0v523um" sourceRef="ManualTask_Transplantation" targetRef="UserTask_ParametrageDeLinstallation" />
-    <bpmn:sequenceFlow id="SequenceFlow_Oui" name="oui" sourceRef="ExclusiveGateway_Pret" targetRef="IntermediateThrowEvent_0r9hzlc" />
+    <bpmn:sequenceFlow id="SequenceFlow_Oui" name="oui" sourceRef="ExclusiveGateway_Pret" targetRef="IntermediateThrowEvent_0r9hzlc">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${variables.input=12}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:manualTask id="ManualTask_ControlerPassageFloraison" name="Controler passage floraison">
       <bpmn:incoming>SequenceFlow_0opisxs</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_16mtvzj</bpmn:outgoing>
     </bpmn:manualTask>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_Pret" name="Pret ?">
+    <bpmn:exclusiveGateway id="ExclusiveGateway_Pret" name="Pret ?" default="SequenceFlow_Non">
       <bpmn:incoming>SequenceFlow_16mtvzj</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_Oui</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_Non</bpmn:outgoing>
@@ -41,10 +43,6 @@
       <bpmn:incoming>SequenceFlow_1v8t517</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0v523um</bpmn:outgoing>
     </bpmn:manualTask>
-    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_01883sq">
-      <bpmn:incoming>SequenceFlow_1dh2964</bpmn:incoming>
-      <bpmn:messageEventDefinition />
-    </bpmn:intermediateThrowEvent>
     <bpmn:manualTask id="ManualTask_LancementDuSystemeEnvoiDunSignal" name="Lancement du système &#10;( envoi d&#39;un signal )">
       <bpmn:incoming>SequenceFlow_0vf43lf</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1dh2964</bpmn:outgoing>
@@ -57,10 +55,6 @@
         <bpmn:targetRef>DataObjectReference_ReferencesEtSeuils</bpmn:targetRef>
       </bpmn:dataOutputAssociation>
     </bpmn:userTask>
-    <bpmn:endEvent id="EndEvent_PassageFloraison" name="Passage floraison">
-      <bpmn:incoming>SequenceFlow_03vwsdf</bpmn:incoming>
-      <bpmn:terminateEventDefinition />
-    </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0opisxs" sourceRef="StartEvent_1leppys" targetRef="ManualTask_ControlerPassageFloraison" />
     <bpmn:startEvent id="StartEvent_1leppys">
       <bpmn:outgoing>SequenceFlow_0opisxs</bpmn:outgoing>
@@ -70,103 +64,140 @@
       <bpmn:incoming>SequenceFlow_1t5yynt</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1t5yynt" sourceRef="ManualTask_CorrectionManuelle" targetRef="EndEvent_1yb7ml6" />
-    <bpmn:sequenceFlow id="SequenceFlow_03vwsdf" sourceRef="IntermediateThrowEvent_0r9hzlc" targetRef="EndEvent_PassageFloraison" />
     <bpmn:sequenceFlow id="SequenceFlow_Non" name="non" sourceRef="ExclusiveGateway_Pret" targetRef="IntermediateThrowEvent_0p4tgm2" />
-    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_0r9hzlc">
-      <bpmn:incoming>SequenceFlow_Oui</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_03vwsdf</bpmn:outgoing>
-      <bpmn:messageEventDefinition />
-    </bpmn:intermediateThrowEvent>
-    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_0p4tgm2">
-      <bpmn:incoming>SequenceFlow_Non</bpmn:incoming>
-      <bpmn:messageEventDefinition />
-    </bpmn:intermediateThrowEvent>
     <bpmn:startEvent id="StartEvent_BouturesPretesAEtreTransplantees" name="Boutures prêtes à être transplantées">
       <bpmn:outgoing>SequenceFlow_1v8t517</bpmn:outgoing>
     </bpmn:startEvent>
-  </bpmn:process>
-  <bpmn:process id="Process_1ydmhs1" isExecutable="false">
-    <bpmn:exclusiveGateway id="ExclusiveGateway_ConditionsBonnes" name="Conditions bonnes ?">
-      <bpmn:incoming>SequenceFlow_1mxbc93</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_Non1</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_Oui2</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="EndEvent_RAS" name="RAS">
-      <bpmn:incoming>SequenceFlow_Oui2</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:serviceTask id="ServiceTask_ControleDesReferencesTtesLesMinutes" name="Controle des références ttes les minutes">
-      <bpmn:incoming>SequenceFlow_19nbb0z</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1mxbc93</bpmn:outgoing>
-      <bpmn:dataOutputAssociation id="DataOutputAssociation_0g7vb12">
-        <bpmn:targetRef>DataObjectReference_ReferencesEtSeuils</bpmn:targetRef>
-      </bpmn:dataOutputAssociation>
-      <bpmn:standardLoopCharacteristics />
-    </bpmn:serviceTask>
-    <bpmn:endEvent id="IntermediateThrowEvent_0dgtd0p">
-      <bpmn:incoming>SequenceFlow_18b11tv</bpmn:incoming>
+    <bpmn:endEvent id="MessageEndEvent_01883sq">
+      <bpmn:incoming>SequenceFlow_1dh2964</bpmn:incoming>
       <bpmn:messageEventDefinition />
     </bpmn:endEvent>
-    <bpmn:serviceTask id="ServiceTask_NotifDeCorrectif" name="Notif de correctif">
-      <bpmn:incoming>SequenceFlow_Non2</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_18b11tv</bpmn:outgoing>
+    <bpmn:endEvent id="IntermediateThrowEvent_0r9hzlc">
+      <bpmn:incoming>SequenceFlow_Oui</bpmn:incoming>
+      <bpmn:messageEventDefinition />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="IntermediateThrowEvent_0p4tgm2">
+      <bpmn:incoming>SequenceFlow_Non</bpmn:incoming>
+      <bpmn:messageEventDefinition />
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:process id="Process_1ydmhs1" isExecutable="false">
+    <bpmn:sequenceFlow id="SequenceFlow_081wvz4" sourceRef="IntermediateThrowEvent_0i7fzvt" targetRef="ServiceTask_NotifDeControleFlo" />
+    <bpmn:sequenceFlow id="SequenceFlow_1hw790e" sourceRef="StartEvent_ApresXSemaines" targetRef="ServiceTask_NotifDeControleFlo" />
+    <bpmn:sequenceFlow id="SequenceFlow_0r1ww7f" sourceRef="ServiceTask_NotifDeControleFlo" targetRef="EndEvent_1uvq61h" />
+    <bpmn:sequenceFlow id="SequenceFlow_0kj2l57" sourceRef="ServiceTask_NotifDeCorrection" targetRef="EndEvent_1k4c0e0" />
+    <bpmn:sequenceFlow id="SequenceFlow_0xepkh0" sourceRef="ServiceTask_CorrectionAutomatique" targetRef="ServiceTask_NotifDeCorrection" />
+    <bpmn:sequenceFlow id="SequenceFlow_Oui1" name="oui" sourceRef="ExclusiveGateway_CorrectionAutomatique" targetRef="ServiceTask_CorrectionAutomatique">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${variables.correction=true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_16ku1i1" sourceRef="ServiceTask_VerifierLaPresenceDunActionneur" targetRef="ExclusiveGateway_CorrectionAutomatique" />
+    <bpmn:sequenceFlow id="SequenceFlow_Non2" name="non" sourceRef="ExclusiveGateway_CorrectionAutomatique" targetRef="ServiceTask_NotifDeCorrectif">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${variables.corrections=false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_18b11tv" sourceRef="ServiceTask_NotifDeCorrectif" targetRef="IntermediateThrowEvent_0dgtd0p" />
+    <bpmn:sequenceFlow id="SequenceFlow_19nbb0z" sourceRef="StartEvent_LancementDuAPE" targetRef="ServiceTask_ControleDesReferencesTtesLesMinutes" />
+    <bpmn:sequenceFlow id="SequenceFlow_Oui2" name="oui" sourceRef="ExclusiveGateway_ConditionsBonnes" targetRef="EndEvent_RAS">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${variables.conditions=12}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_Non1" name="non" sourceRef="ExclusiveGateway_ConditionsBonnes" targetRef="ServiceTask_VerifierLaPresenceDunActionneur" />
+    <bpmn:sequenceFlow id="SequenceFlow_1mxbc93" sourceRef="ServiceTask_ControleDesReferencesTtesLesMinutes" targetRef="ExclusiveGateway_ConditionsBonnes" />
+    <bpmn:startEvent id="IntermediateThrowEvent_0i7fzvt">
+      <bpmn:outgoing>SequenceFlow_081wvz4</bpmn:outgoing>
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="ServiceTask_NotifDeControleFlo" name="Notif de controle flo" camunda:expression="${services.aloesAction}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="action">ping</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1hw790e</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_081wvz4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0r1ww7f</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="ServiceTask_VerifierLaPresenceDunActionneur" name="Vérifier la présence d&#39;un actionneur">
-      <bpmn:incoming>SequenceFlow_Non1</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_16ku1i1</bpmn:outgoing>
+    <bpmn:startEvent id="StartEvent_ApresXSemaines" name="Après x semaines">
+      <bpmn:outgoing>SequenceFlow_1hw790e</bpmn:outgoing>
+      <bpmn:timerEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:dataObjectReference id="DataObjectReference_ReferencesEtSeuils" name="références et seuils" dataObjectRef="DataObject_1mjtzxu" />
+    <bpmn:dataObject id="DataObject_1mjtzxu" />
+    <bpmn:startEvent id="StartEvent_LancementDuAPE" name="lancement du APE">
+      <bpmn:outgoing>SequenceFlow_19nbb0z</bpmn:outgoing>
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_1uvq61h" name="Notif envoyé">
+      <bpmn:incoming>SequenceFlow_0r1ww7f</bpmn:incoming>
+      <bpmn:messageEventDefinition />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="EndEvent_1k4c0e0" name="Notif envoyé">
+      <bpmn:incoming>SequenceFlow_0kj2l57</bpmn:incoming>
+      <bpmn:messageEventDefinition />
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="ServiceTask_NotifDeCorrection" name="Notif de correction" camunda:expression="${services.aloesAction}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="action">ping</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0xepkh0</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0kj2l57</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="ServiceTask_CorrectionAutomatique" name="Correction automatique" camunda:expression="${services.aloesAction}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="action">ping</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_Oui1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0xepkh0</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_CorrectionAutomatique" name="Correction automatique ?">
       <bpmn:incoming>SequenceFlow_16ku1i1</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_Oui1</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_Non2</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="ServiceTask_CorrectionAutomatique" name="Correction automatique">
-      <bpmn:incoming>SequenceFlow_Oui1</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0xepkh0</bpmn:outgoing>
+    <bpmn:serviceTask id="ServiceTask_VerifierLaPresenceDunActionneur" name="Vérifier la présence d&#39;un actionneur" camunda:expression="${services.aloesAction}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="action">ping</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_Non1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_16ku1i1</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="ServiceTask_NotifDeCorrection" name="Notif de correction">
-      <bpmn:incoming>SequenceFlow_0xepkh0</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0kj2l57</bpmn:outgoing>
+    <bpmn:serviceTask id="ServiceTask_NotifDeCorrectif" name="Notif de correctif" camunda:expression="${services.aloesAction}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="action">ping</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_Non2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_18b11tv</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:endEvent id="EndEvent_1k4c0e0" name="Notif envoyé">
-      <bpmn:incoming>SequenceFlow_0kj2l57</bpmn:incoming>
+    <bpmn:endEvent id="IntermediateThrowEvent_0dgtd0p">
+      <bpmn:incoming>SequenceFlow_18b11tv</bpmn:incoming>
       <bpmn:messageEventDefinition />
     </bpmn:endEvent>
-    <bpmn:endEvent id="EndEvent_1uvq61h" name="Notif envoyé">
-      <bpmn:incoming>SequenceFlow_0r1ww7f</bpmn:incoming>
-      <bpmn:messageEventDefinition />
-    </bpmn:endEvent>
-    <bpmn:intermediateCatchEvent id="IntermediateThrowEvent_0i7fzvt">
-      <bpmn:outgoing>SequenceFlow_081wvz4</bpmn:outgoing>
-      <bpmn:messageEventDefinition />
-    </bpmn:intermediateCatchEvent>
-    <bpmn:startEvent id="StartEvent_LancementDuAPE" name="lancement du APE">
-      <bpmn:outgoing>SequenceFlow_19nbb0z</bpmn:outgoing>
-      <bpmn:messageEventDefinition />
-    </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1mxbc93" sourceRef="ServiceTask_ControleDesReferencesTtesLesMinutes" targetRef="ExclusiveGateway_ConditionsBonnes" />
-    <bpmn:sequenceFlow id="SequenceFlow_Non1" name="non" sourceRef="ExclusiveGateway_ConditionsBonnes" targetRef="ServiceTask_VerifierLaPresenceDunActionneur" />
-    <bpmn:sequenceFlow id="SequenceFlow_Oui2" name="oui" sourceRef="ExclusiveGateway_ConditionsBonnes" targetRef="EndEvent_RAS" />
-    <bpmn:sequenceFlow id="SequenceFlow_19nbb0z" sourceRef="StartEvent_LancementDuAPE" targetRef="ServiceTask_ControleDesReferencesTtesLesMinutes" />
-    <bpmn:sequenceFlow id="SequenceFlow_18b11tv" sourceRef="ServiceTask_NotifDeCorrectif" targetRef="IntermediateThrowEvent_0dgtd0p" />
-    <bpmn:sequenceFlow id="SequenceFlow_16ku1i1" sourceRef="ServiceTask_VerifierLaPresenceDunActionneur" targetRef="ExclusiveGateway_CorrectionAutomatique" />
-    <bpmn:sequenceFlow id="SequenceFlow_Oui1" name="oui" sourceRef="ExclusiveGateway_CorrectionAutomatique" targetRef="ServiceTask_CorrectionAutomatique" />
-    <bpmn:sequenceFlow id="SequenceFlow_0xepkh0" sourceRef="ServiceTask_CorrectionAutomatique" targetRef="ServiceTask_NotifDeCorrection" />
-    <bpmn:sequenceFlow id="SequenceFlow_0kj2l57" sourceRef="ServiceTask_NotifDeCorrection" targetRef="EndEvent_1k4c0e0" />
-    <bpmn:sequenceFlow id="SequenceFlow_1hw790e" sourceRef="StartEvent_ApresXSemaines" targetRef="ServiceTask_NotifDeControleFlo" />
-    <bpmn:sequenceFlow id="SequenceFlow_081wvz4" sourceRef="IntermediateThrowEvent_0i7fzvt" targetRef="ServiceTask_NotifDeControleFlo" />
-    <bpmn:sequenceFlow id="SequenceFlow_0r1ww7f" sourceRef="ServiceTask_NotifDeControleFlo" targetRef="EndEvent_1uvq61h" />
-    <bpmn:dataObjectReference id="DataObjectReference_ReferencesEtSeuils" name="références et seuils" dataObjectRef="DataObject_1mjtzxu" />
-    <bpmn:dataObject id="DataObject_1mjtzxu" />
-    <bpmn:startEvent id="StartEvent_ApresXSemaines" name="Après x semaines">
-      <bpmn:outgoing>SequenceFlow_1hw790e</bpmn:outgoing>
-      <bpmn:timerEventDefinition />
-    </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_Non2" name="non" sourceRef="ExclusiveGateway_CorrectionAutomatique" targetRef="ServiceTask_NotifDeCorrectif" />
-    <bpmn:serviceTask id="ServiceTask_NotifDeControleFlo" name="Notif de controle flo">
-      <bpmn:incoming>SequenceFlow_1hw790e</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_081wvz4</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0r1ww7f</bpmn:outgoing>
+    <bpmn:serviceTask id="ServiceTask_ControleDesReferencesTtesLesMinutes" name="Controle des références" camunda:expression="${services.aloesAction}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="action">ping</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_19nbb0z</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1mxbc93</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_0g7vb12">
+        <bpmn:targetRef>DataObjectReference_ReferencesEtSeuils</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_RAS" name="RAS">
+      <bpmn:incoming>SequenceFlow_Oui2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_ConditionsBonnes" name="Conditions bonnes ?" default="SequenceFlow_Non1">
+      <bpmn:incoming>SequenceFlow_1mxbc93</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_Non1</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_Oui2</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
     <bpmn:association id="Association_1v8pm94" sourceRef="DataObjectReference_ReferencesEtSeuils" targetRef="TextAnnotation_1dgmnvj" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -265,12 +296,6 @@
           <dc:Bounds x="563" y="439" width="25" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="EndEvent_0m7bu02_di" bpmnElement="EndEvent_PassageFloraison" bioc:stroke="#000" bioc:fill="#fff">
-        <dc:Bounds x="1237" y="168" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1210" y="208" width="90" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_1k4qqea_di" bpmnElement="ExclusiveGateway_Pret" isMarkerVisible="true" bioc:stroke="#000" bioc:fill="#fff">
         <dc:Bounds x="979.5605875152999" y="161" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -299,15 +324,9 @@
         <di:waypoint xsi:type="dc:Point" x="663" y="239" />
         <di:waypoint xsi:type="dc:Point" x="681" y="239" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="672" y="218" width="0" height="12" />
+          <dc:Bounds x="627" y="218" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="IntermediateThrowEvent_0atpdge_di" bpmnElement="IntermediateThrowEvent_01883sq" bioc:stroke="#000" bioc:fill="#fff">
-        <dc:Bounds x="681" y="221" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="698.5605875152999" y="261" width="0" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="MessageFlow_1x1iud5_di" bpmnElement="MessageFlow_1x1iud5" bioc:stroke="#000" bioc:fill="#fff">
         <di:waypoint xsi:type="dc:Point" x="699" y="257" />
         <di:waypoint xsi:type="dc:Point" x="699" y="284" />
@@ -447,7 +466,7 @@
         <di:waypoint xsi:type="dc:Point" x="778" y="253" />
         <di:waypoint xsi:type="dc:Point" x="778" y="202" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="884.5" y="232" width="90" height="12" />
+          <dc:Bounds x="885" y="232" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_1yb7ml6_di" bpmnElement="EndEvent_1yb7ml6" bioc:stroke="#000" bioc:fill="#fff">
@@ -463,15 +482,6 @@
           <dc:Bounds x="852" y="314" width="0" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_03vwsdf_di" bpmnElement="SequenceFlow_03vwsdf" bioc:stroke="#000" bioc:fill="#fff">
-        <di:waypoint xsi:type="dc:Point" x="1114" y="186" />
-        <di:waypoint xsi:type="dc:Point" x="1186" y="186" />
-        <di:waypoint xsi:type="dc:Point" x="1186" y="186" />
-        <di:waypoint xsi:type="dc:Point" x="1237" y="186" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1185.5" y="165" width="0" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_18btgn0_di" bpmnElement="SequenceFlow_Non" bioc:stroke="#000" bioc:fill="#fff">
         <di:waypoint xsi:type="dc:Point" x="1005" y="211" />
         <di:waypoint xsi:type="dc:Point" x="1005" y="270" />
@@ -479,24 +489,6 @@
           <dc:Bounds x="1010" y="233" width="21" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="IntermediateThrowEvent_0mb1lu6_di" bpmnElement="IntermediateThrowEvent_0r9hzlc" bioc:stroke="#000" bioc:fill="#fff">
-        <dc:Bounds x="1078" y="168" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1096" y="208" width="0" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="IntermediateThrowEvent_0x0j0nn_di" bpmnElement="IntermediateThrowEvent_0p4tgm2" bioc:stroke="#000" bioc:fill="#fff">
-        <dc:Bounds x="987" y="270" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1005" y="310" width="0" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="IntermediateCatchEvent_1d0j9fz_di" bpmnElement="IntermediateThrowEvent_0i7fzvt" bioc:stroke="#000" bioc:fill="#fff">
-        <dc:Bounds x="953" y="446" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="926" y="486" width="90" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_081wvz4_di" bpmnElement="SequenceFlow_081wvz4" bioc:stroke="#000" bioc:fill="#fff">
         <di:waypoint xsi:type="dc:Point" x="971" y="482" />
         <di:waypoint xsi:type="dc:Point" x="971" y="502" />
@@ -554,6 +546,30 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_14nwfze_di" bpmnElement="ServiceTask_NotifDeControleFlo">
         <dc:Bounds x="921" y="502" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0mhi4bl_di" bpmnElement="MessageEndEvent_01883sq" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="681" y="221" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="654" y="261" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_07rhadx_di" bpmnElement="IntermediateThrowEvent_0r9hzlc" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="1078" y="168" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1051" y="208" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_12jb0jv_di" bpmnElement="IntermediateThrowEvent_0i7fzvt" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="953" y="446" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="926" y="486" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1yylpuz_di" bpmnElement="IntermediateThrowEvent_0p4tgm2" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="987" y="270" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="960" y="310" width="0" height="12" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
