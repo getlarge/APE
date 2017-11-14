@@ -13,7 +13,7 @@ var MQTTPattern = require("mqtt-pattern");
 
 let stepsCounter = 0;
 let clientsConnected = 0;
-let servicesCounter = 3;
+let servicesCounter = 2;
 let id;
 let type;
 let event;
@@ -30,10 +30,10 @@ aloesClient.on('connected', () => {
   }, 1000);
 });
 
-chatClient.on('connected', () => {
-  clientsConnected++;
-  init(clientsConnected);
-});
+// chatClient.on('connected', () => {
+//   clientsConnected++;
+//   init(clientsConnected);
+// });
 
 //krakenClient.on('connected', () => {
 //  clientsConnected++;
@@ -77,9 +77,9 @@ const listener = new EventEmitter();
         /// rajouter heures et date
         console.log('STEP # :', stepsCounter, '| START', `${task.type} <${task.id}>`);
 
-        if (stepsCounter <= 1) {
+        if (true) {
           console.log('<!-- START APE -->');
-          mqttClient.publish(filled, "<!-- START APE -->");
+          mqttClient.publish(filled, {'start' : 'ok'});
           engine.getDefinitions((err, definitions) => {
           if (err) throw err;
             console.log('Loaded', definitions[0].id);
@@ -222,7 +222,7 @@ let init = (clientsConnected) => {
         });
         //console.log('Definition started with process', instance.mainProcess.id);
       });  
-    }, 2000);
+    }, 5000);
   }
 };
 

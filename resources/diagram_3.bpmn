@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
   <bpmn:process id="Process_1" name="Test process" isExecutable="true" camunda:versionTag="1.0">
     <bpmn:serviceTask id="Task_1x9s8ih" name="mqtt_receiver" camunda:expression="${services.mqttAction}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="action">receive</camunda:inputParameter>
-          <camunda:inputParameter name="topic">APE/service/1212</camunda:inputParameter>
+          <camunda:inputParameter name="topic">logs</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_1v2kxio</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:boundaryEvent id="BoundaryEvent_01av49n" attachedToRef="Task_1x9s8ih">
-      <bpmn:outgoing>SequenceFlow_14bahlg</bpmn:outgoing>
-      <bpmn:timerEventDefinition>
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT0.10S</bpmn:timeDuration>
-      </bpmn:timerEventDefinition>
-    </bpmn:boundaryEvent>
-    <bpmn:endEvent id="EndEvent_18nf9ck">
-      <bpmn:incoming>SequenceFlow_14bahlg</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_14bahlg" sourceRef="BoundaryEvent_01av49n" targetRef="EndEvent_18nf9ck" />
     <bpmn:sequenceFlow id="SequenceFlow_1v2kxio" sourceRef="Task_1x9s8ih" targetRef="IntermediateThrowEvent_1ojmpkv" />
     <bpmn:endEvent id="IntermediateThrowEvent_1ojmpkv" camunda:asyncBefore="true">
       <bpmn:incoming>SequenceFlow_1v2kxio</bpmn:incoming>
@@ -31,34 +21,14 @@
       <bpmndi:BPMNShape id="ServiceTask_1pxk7tt_di" bpmnElement="Task_1x9s8ih">
         <dc:Bounds x="121" y="27" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BoundaryEvent_1sxr15d_di" bpmnElement="BoundaryEvent_01av49n">
-        <dc:Bounds x="176" y="89" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="193.82965299684543" y="129" width="0" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="EndEvent_18nf9ck_di" bpmnElement="EndEvent_18nf9ck">
-        <dc:Bounds x="282.8296529968454" y="136" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="300.8296529968454" y="176" width="0" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_14bahlg_di" bpmnElement="SequenceFlow_14bahlg">
-        <di:waypoint xsi:type="dc:Point" x="194" y="125" />
-        <di:waypoint xsi:type="dc:Point" x="194" y="155" />
-        <di:waypoint xsi:type="dc:Point" x="283" y="154" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="209" y="134" width="0" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1v2kxio_di" bpmnElement="SequenceFlow_1v2kxio">
+      <bpmndi:BPMNEdge id="SequenceFlow_1v2kxio_di" bpmnElement="SequenceFlow_1v2kxio" bioc:stroke="#000" bioc:fill="#fff">
         <di:waypoint xsi:type="dc:Point" x="221" y="67" />
         <di:waypoint xsi:type="dc:Point" x="309" y="67" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="265" y="46" width="0" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EndEvent_0urfa7t_di" bpmnElement="IntermediateThrowEvent_1ojmpkv">
+      <bpmndi:BPMNShape id="EndEvent_0urfa7t_di" bpmnElement="IntermediateThrowEvent_1ojmpkv" bioc:stroke="#000" bioc:fill="#fff">
         <dc:Bounds x="309" y="49" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="326.8296529968454" y="89" width="0" height="12" />

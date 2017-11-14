@@ -9,31 +9,16 @@ module.exports.mqttAction = (message, callback) => {
   let {action, topic, payload, delay} = message;
     action = action || 'subscribe';
     topic = topic || 'logs';
-    payload = payload || 'APE_test';
+    payload = payload || {'hello' : 'toto'};
     delay = delay || 1;
 
   switch(message.action) {
 
     case "publish":
-      MQTTClient.publish(topic, payload, (err, response) => {
-          console.log(response);
-          //const result = response;
-          callback();
+    console.log()
+      MQTTClient.publish(topic, payload, (message) => {
+          console.log('CALLBACK')
       });
-      break;
-
-    case "receive":
-        MQTTClient.receive(topic, (err, response) => {
-            //clientsConnected++;
-            //setTimeout(function(){                  
-              if (err) return callback(err);
-              MQTTClient.on('message_received', () => {
-                  console.log('message received');
-                  return callback();
-                })
-            //}, message.delay * 1000);
-          //callback(null, true),
-        });
       break;
 
     case "subscribe":
@@ -44,9 +29,8 @@ module.exports.mqttAction = (message, callback) => {
       break;
  
     default:
-      MQTTClient.publish(topic, payload, (err, response) => {
-          console.log(response);
-          callback();
+      MQTTClient.publish(topic, payload, (message) => {
+          console.log('CALLBACK', message)
       });
  
     }
